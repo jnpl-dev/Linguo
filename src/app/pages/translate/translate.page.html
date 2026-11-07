@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Linguo</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/history">History</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-button expand="block" (click)="takePhoto()">Take Photo</ion-button>
+  <ion-button expand="block" fill="outline" (click)="chooseFromGallery()">Choose from Gallery</ion-button>
+  <p>{{ photoStatus() }}</p>
+</ion-content>
