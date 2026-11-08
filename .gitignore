@@ -33,6 +33,15 @@ yarn-debug.log*
 yarn-error.log*
 /dist
 
+# Angular / Ionic / Capacitor
+/.angular/cache
+/www
+/.ionic
+/test-results
+/playwright-report
+/blob-report
+/.tmp
+
 # IDEs
 .idea/
 .vscode/

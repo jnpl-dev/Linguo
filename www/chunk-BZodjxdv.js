@@ -1,1 +1,0 @@
-import{vt as J,yt as at}from"./main-RRG3VDUU.js";export{at as createGesture};

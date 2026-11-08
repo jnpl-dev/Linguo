@@ -1,1 +1,0 @@
-import{b as L,x as P,y as E}from"./chunk--ruLmCBV.js";var i=class extends E{async identifyLanguage(o){throw this.createUnimplementedException()}async identifyPossibleLanguages(o){throw this.createUnimplementedException()}createUnimplementedException(){return new P(`This method is not implemented on web.`,L.Unimplemented)}};export{i as LanguageIdentificationWeb};
