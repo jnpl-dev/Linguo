@@ -1,2 +1,146 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+/**
+ * Linguo design tokens.
+ *
+ * Palette sampled directly from the brand art:
+ *   src/assets/icon/linguo-secondary.png — navy #131844, royal blue #3362FB,
+ *                                          pale blue #B1BFFB, amber #FCB52A
+ *   src/assets/icon/favicon.png          — sky blue #478AFF
+ */
+
+:root {
+  /* ---------------------------------------------------------------- palette */
+  --ion-color-primary: #3362fb;
+  --ion-color-primary-rgb: 51, 98, 251;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #2d56dc;
+  --ion-color-primary-tint: #4672fc;
+
+  --ion-color-secondary: #478aff;
+  --ion-color-secondary-rgb: 71, 138, 255;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #3f7ae6;
+  --ion-color-secondary-tint: #5996ff;
+
+  --ion-color-tertiary: #fcb52a;
+  --ion-color-tertiary-rgb: 252, 181, 42;
+  --ion-color-tertiary-contrast: #131844;
+  --ion-color-tertiary-contrast-rgb: 19, 24, 68;
+  --ion-color-tertiary-shade: #df9f25;
+  --ion-color-tertiary-tint: #fdc243;
+
+  --ion-color-success: #12b886;
+  --ion-color-success-rgb: 18, 184, 134;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #10a476;
+  --ion-color-success-tint: #2cc091;
+
+  --ion-color-warning: #fcb52a;
+  --ion-color-warning-rgb: 252, 181, 42;
+  --ion-color-warning-contrast: #131844;
+  --ion-color-warning-contrast-rgb: 19, 24, 68;
+  --ion-color-warning-shade: #df9f25;
+  --ion-color-warning-tint: #fdc243;
+
+  --ion-color-danger: #ef476f;
+  --ion-color-danger-rgb: 239, 71, 111;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d33e62;
+  --ion-color-danger-tint: #f15a80;
+
+  --ion-color-dark: #131844;
+  --ion-color-dark-rgb: 19, 24, 68;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #11163c;
+  --ion-color-dark-tint: #2a2f57;
+
+  --ion-color-medium: #6b7290;
+  --ion-color-medium-rgb: 107, 114, 144;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #5f657f;
+  --ion-color-medium-tint: #7d839c;
+
+  --ion-color-light: #eef2ff;
+  --ion-color-light-rgb: 238, 242, 255;
+  --ion-color-light-contrast: #131844;
+  --ion-color-light-contrast-rgb: 19, 24, 68;
+  --ion-color-light-shade: #d2d8e6;
+  --ion-color-light-tint: #f0f4ff;
+
+  /* ------------------------------------------------------------- surfaces */
+  --ion-background-color: #e7ebf7;
+  --ion-text-color: #131844;
+  --ion-toolbar-background: transparent;
+  --ion-toolbar-color: #131844;
+  --ion-item-background: transparent;
+  --ion-card-background: #ffffff;
+  --ion-border-color: #dde4f4;
+  --ion-font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', sans-serif;
+
+  /* ---------------------------------------------------------- linguo tokens */
+  --linguo-ink: #131844;
+  --linguo-ink-soft: #5a6488;
+  --linguo-line: #dde4f4;
+  --linguo-surface: #ffffff;
+  --linguo-surface-alt: #eff3fc;
+  --linguo-bg: #e7ebf7;
+  --linguo-bg-top: #dce3f3;
+  --linguo-radius: 20px;
+  --linguo-radius-sm: 14px;
+  --linguo-shadow: 0 1px 2px rgba(19, 24, 68, 0.04), 0 10px 24px rgba(19, 24, 68, 0.06);
+  --linguo-shadow-strong: 0 2px 4px rgba(19, 24, 68, 0.05), 0 18px 40px rgba(19, 24, 68, 0.1);
+  --linguo-gradient: linear-gradient(135deg, #2e5be8 0%, #478aff 100%);
+  --linguo-gradient-glow: 0 8px 20px rgba(46, 91, 232, 0.28);
+
+  /* Deep navy hero surface — taken from the mascot's face plate. */
+  --linguo-hero: linear-gradient(155deg, #1b2364 0%, #131844 62%, #101540 100%);
+  --linguo-hero-line: rgba(255, 255, 255, 0.12);
+  --linguo-hero-text: #eef1ff;
+  --linguo-hero-muted: #a3addb;
+  --linguo-hero-field: rgba(255, 255, 255, 0.06);
+  --linguo-hero-dash: rgba(126, 163, 255, 0.45);
+
+  /* Warm amber chip — echoes the mascot's sparkles. */
+  --linguo-amber: #fff3da;
+  --linguo-amber-ink: #8a5a00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #0b0f2b;
+    --ion-text-color: #e9edff;
+    --ion-toolbar-color: #e9edff;
+    --ion-item-background: transparent;
+    --ion-card-background: #141943;
+    --ion-border-color: #232a5e;
+    --ion-color-light: #1b2152;
+    --ion-color-light-contrast: #e9edff;
+    --ion-color-dark: #e9edff;
+    --ion-color-dark-contrast: #0b0f2b;
+    --ion-color-medium: #9aa3cf;
+
+    --linguo-ink: #e9edff;
+    --linguo-ink-soft: #9aa3cc;
+    --linguo-line: #232a5e;
+    --linguo-surface: #141943;
+    --linguo-surface-alt: #1b2152;
+    --linguo-bg: #0b0f2b;
+    --linguo-bg-top: #101540;
+    --linguo-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.3);
+    --linguo-shadow-strong: 0 2px 4px rgba(0, 0, 0, 0.45), 0 18px 40px rgba(0, 0, 0, 0.45);
+    --linguo-gradient-glow: 0 8px 20px rgba(46, 91, 232, 0.4);
+
+    --linguo-hero: linear-gradient(155deg, #212a75 0%, #161d55 62%, #111640 100%);
+    --linguo-hero-line: rgba(255, 255, 255, 0.14);
+    --linguo-hero-field: rgba(255, 255, 255, 0.07);
+
+    --linguo-amber: #3a2f14;
+    --linguo-amber-ink: #f6c663;
+  }
+}

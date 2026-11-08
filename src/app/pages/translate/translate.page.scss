@@ -1,4 +1,88 @@
-/* Translate page styles — built in Phase 3; Phase 2 crop UI below. */
+/* Translate page — layout only; shared primitives live in global.scss. */
+
+.page {
+  padding: 4px 16px calc(28px + var(--ion-safe-area-bottom, 0px));
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* capture ------------------------------------------------------------- */
+
+.preview-wrap {
+  border: 1px solid var(--linguo-line);
+  border-radius: var(--linguo-radius-sm);
+  overflow: hidden;
+  background: var(--linguo-surface-alt);
+}
+
+/* Inside the navy hero the field becomes translucent rather than white,
+   so it stops punching a bright hole in the card. */
+.capture .preview-wrap {
+  background: var(--linguo-hero-field);
+  border-color: transparent;
+}
+
+.preview-wrap.is-empty {
+  border-style: dashed;
+  border-color: var(--linguo-hero-dash);
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  max-height: 190px;
+  object-fit: contain;
+}
+
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 120px;
+  color: var(--linguo-hero-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.preview-empty ion-icon {
+  font-size: 34px;
+  color: #7ea3ff;
+}
+
+.capture-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Gallery sits on the navy hero, so it needs a light outline. */
+.capture-actions ion-button.pill {
+  --color: var(--linguo-hero-text);
+  --border-color: rgba(255, 255, 255, 0.38);
+  --background: transparent;
+}
+
+.btn-flex {
+  flex: 1;
+  margin: 0;
+}
+
+/* captions ------------------------------------------------------------- */
+
+.detected-wrap {
+  margin: 12px 0 0;
+}
+
+.lang-hint {
+  margin: 10px 0 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ion-color-warning-shade, #df9f25);
+}
+
+/* languages ------------------------------------------------------------ */
 
 .lang-row {
   display: flex;
@@ -12,124 +96,24 @@
 }
 
 .swap-btn {
-  --padding-start: 4px;
-  --padding-end: 4px;
+  --padding-start: 6px;
+  --padding-end: 6px;
+  --color: var(--ion-color-primary);
   height: 44px;
-}
-
-.lang-hint {
-  margin: 4px 0;
-  font-size: 0.9rem;
-  color: var(--ion-color-warning-shade, #b45309);
-}
-
-.detected-caption {
-  margin: 4px 0 0;
-  font-size: 0.9rem;
-  color: var(--ion-color-primary);
-  font-weight: 600;
-}
-
-.preview-wrap {
-  margin: 0 0 8px;
-  border: 1px solid var(--ion-color-step-200, #d7d8da);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--ion-color-step-50, #f4f5f8);
-}
-
-.preview-wrap.is-empty {
-  border-style: dashed;
-  border-color: var(--ion-color-step-300, #c8c9cc);
-}
-
-.preview {
-  display: block;
-  width: 100%;
-  max-height: 160px;
-  object-fit: contain;
-}
-
-.preview-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 110px;
-  color: var(--ion-color-medium);
-  font-size: 0.9rem;
-}
-
-.preview-empty ion-icon {
-  font-size: 32px;
+  margin-bottom: 2px;
 }
 
 .btn-row {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
-.btn-row .btn-flex {
-  flex: 1;
-  margin: 0;
+.result {
+  border-color: #c8d4f7;
 }
 
-.crop-content {
-  --background: var(--ion-color-step-100, #f4f5f8);
-}
-
-.crop-stage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-}
-
-.crop-frame {
-  position: relative;
-  display: inline-block;
-  line-height: 0;
-  max-width: 100%;
-}
-
-.crop-img {
-  display: block;
-  max-width: 100%;
-  max-height: 65vh;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.crop-rect {
-  position: absolute;
-  border: 2px solid var(--ion-color-primary);
-  background: rgba(13, 148, 136, 0.12);
-  box-sizing: border-box;
-  touch-action: none;
-  cursor: move;
-}
-
-.handle {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  background: var(--ion-color-primary);
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-sizing: border-box;
-  touch-action: none;
-  cursor: grab;
-}
-
-.handle.nw { left: -15px; top: -15px; }
-.handle.ne { right: -15px; top: -15px; }
-.handle.sw { left: -15px; bottom: -15px; }
-.handle.se { right: -15px; bottom: -15px; }
-
-.crop-hint {
-  font-size: 0.9rem;
-  color: var(--ion-color-medium);
+/* Standalone CTA between panels needs its own breathing room. */
+.page-cta {
+  margin: 16px 0 16px;
 }

@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="brand-header">
   <ion-toolbar>
     @if (selecting()) {
     <ion-buttons slot="start">
@@ -8,7 +8,7 @@
     </ion-buttons>
     <ion-title>{{ selectedCount() }} selected</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="toggleSelectAll()">
+      <ion-button fill="clear" class="pill" (click)="toggleSelectAll()">
         <ion-icon slot="start" name="checkmark-done"></ion-icon>
         {{ allSelected() ? 'Deselect' : 'Select all' }}
       </ion-button>
@@ -26,7 +26,10 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/translate"></ion-back-button>
     </ion-buttons>
-    <ion-title>History</ion-title>
+    <ion-title>
+      <img src="assets/icon/linguo-mark.png" alt="" />
+      <span>History</span>
+    </ion-title>
     }
   </ion-toolbar>
 </ion-header>
@@ -34,41 +37,46 @@
 <ion-content>
   @if (items().length === 0) {
   <div class="empty-state">
-    <p>No saved translations yet.</p>
-    <p class="empty-hint">Translate something, then tap “Save to History”.</p>
+    <img src="assets/icon/linguo-primary.png" alt="" />
+    <h2>No saved translations yet</h2>
+    <p class="empty-hint">Translate something, then tap “Save to History” and it will show up here.</p>
+    <ion-button class="cta pill" routerLink="/translate">Start translating</ion-button>
   </div>
   } @else {
-  <ion-list lines="full">
-    @for (item of items(); track item.id) {
-    <ion-item-sliding>
-      <ion-item
-        button
-        detail
-        [class.selected]="isSelected(item.id)"
-        (click)="open(item)"
-        (pointerdown)="onItemPointerDown($event, item)"
-        (pointermove)="onItemPointerMove($event)"
-        (pointerup)="onItemPointerUp()"
-        (pointercancel)="onItemPointerUp()"
-      >
-        @if (selecting()) {
-        <ion-checkbox slot="start" [checked]="isSelected(item.id)" aria-hidden="true" tabindex="-1"></ion-checkbox>
+  <div class="page">
+    <ion-list lines="none" class="hist-list">
+      @for (item of items(); track item.id) {
+      <ion-item-sliding>
+        <ion-item
+          button
+          detail
+          [class.selected]="isSelected(item.id)"
+          (click)="open(item)"
+          (pointerdown)="onItemPointerDown($event, item)"
+          (pointermove)="onItemPointerMove($event)"
+          (pointerup)="onItemPointerUp()"
+          (pointercancel)="onItemPointerUp()"
+        >
+          @if (selecting()) {
+          <ion-checkbox slot="start" [checked]="isSelected(item.id)" aria-hidden="true" tabindex="-1"></ion-checkbox>
+          }
+          <ion-label class="hist-label">
+            <p class="meta-top">
+              <span class="lang-chip">{{ label(item.sourceLang) }} → {{ label(item.targetLang) }}</span>
+              <span class="date">{{ item.createdAt | date: 'mediumDate' }}</span>
+            </p>
+            <h2>{{ item.translatedText }}</h2>
+            <p class="source">{{ item.sourceText }}</p>
+          </ion-label>
+        </ion-item>
+        @if (!selecting()) {
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="remove(item)">Delete</ion-item-option>
+        </ion-item-options>
         }
-        <ion-label class="hist-label">
-          <h2>{{ item.translatedText }}</h2>
-          <p class="source">{{ item.sourceText }}</p>
-          <p class="meta">
-            {{ label(item.sourceLang) }} → {{ label(item.targetLang) }} · {{ item.createdAt | date: 'medium' }}
-          </p>
-        </ion-label>
-      </ion-item>
-      @if (!selecting()) {
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="remove(item)">Delete</ion-item-option>
-      </ion-item-options>
+      </ion-item-sliding>
       }
-    </ion-item-sliding>
-    }
-  </ion-list>
+    </ion-list>
+  </div>
   }
 </ion-content>

@@ -19,7 +19,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { imageOutline, swapHorizontal } from 'ionicons/icons';
+import { camera, images, imageOutline, sparklesOutline, swapHorizontal, timeOutline } from 'ionicons/icons';
 
 import { LANGUAGES, type LanguageOption } from '../../models/language';
 import { CropService, type CropRect } from '../../services/crop.service';
@@ -66,7 +66,7 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-addIcons({ swapHorizontal, imageOutline });
+addIcons({ swapHorizontal, imageOutline, camera, images, sparklesOutline, timeOutline });
 
 @Component({
   selector: 'app-translate',

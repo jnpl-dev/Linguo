@@ -1,29 +1,80 @@
-.empty-state {
+/* History page — layout only; shared primitives live in global.scss. */
+
+.page {
+  padding: 4px 16px calc(28px + var(--ion-safe-area-bottom, 0px));
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.hist-list {
+  background: transparent;
+  padding: 0;
+}
+
+.hist-list ion-item {
+  --background: var(--linguo-surface);
+  --background-hover: var(--linguo-surface);
+  --background-selected: var(--linguo-surface-alt);
+  --border-radius: var(--linguo-radius-sm);
+  --border-color: transparent;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --min-height: 92px;
+  margin-bottom: 10px;
+  box-shadow: var(--linguo-shadow);
+}
+
+.hist-list ion-item::part(detail-icon) {
+  color: var(--linguo-ink-soft);
+  opacity: 0.55;
+}
+
+.hist-list ion-item.selected {
+  --background: var(--linguo-surface-alt);
+}
+
+.hist-label {
+  width: 100%;
+}
+
+.meta-top {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 24px;
-  color: var(--ion-color-medium);
-  text-align: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 6px;
 }
 
-.empty-hint {
-  font-size: 0.9rem;
+.lang-chip {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--ion-color-primary);
+  background: var(--linguo-surface-alt);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 65%;
 }
 
-/* Selection mode: the whole row toggles the checkbox, so the control itself must not take taps. */
-ion-item ion-checkbox {
-  pointer-events: none;
+.date {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--linguo-ink-soft);
+  white-space: nowrap;
+  flex: none;
 }
 
-ion-item.selected {
-  --background: var(--ion-color-step-100, #f4f5f8);
-}
-
-.hist-label h2,
-.hist-label .source {
+.hist-label h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--linguo-ink);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -31,17 +82,19 @@ ion-item.selected {
   -webkit-line-clamp: 2;
 }
 
-.hist-label h2 {
-  font-weight: 600;
-}
-
 .hist-label .source {
-  color: var(--ion-color-medium);
-  font-size: 0.9rem;
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--linguo-ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.hist-label .meta {
-  font-size: 0.78rem;
-  color: var(--ion-color-medium);
-  margin-top: 4px;
+/* Selection mode: the whole row toggles the checkbox, so it must not take taps. */
+ion-item ion-checkbox {
+  pointer-events: none;
 }

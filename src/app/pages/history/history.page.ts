@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   AlertController,
   IonBackButton,
@@ -40,6 +40,7 @@ const HOLD_MOVE_PX = 10;
   styleUrls: ['./history.page.scss'],
   imports: [
     DatePipe,
+    RouterLink,
     IonHeader,
     IonToolbar,
     IonTitle,
