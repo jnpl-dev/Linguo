@@ -3,9 +3,9 @@
 Read this at the start of every session. Update it at the end of every session (see `agents.md` section 3).
 
 ## Status
-- Current phase: 2 (in progress)
-- Last completed task: 2.1
-- Next task: 2.2 (DEVICE)
+- Current phase: 4 complete; fixes F1/F2 + adjustments A1/A2 ticked; phases 1–3 done
+- Last completed task: A1 (Translate reorder + visible placeholder) + A2 (history image via `@capacitor/filesystem`) — built, installed, fully verified on device incl. restart persistence
+- Next task: 5.1 (DEVICE) run `testing.md` checklist
 
 ## Installed versions
 Fill in after task 1.2 with `npm ls --depth=0`.
@@ -17,6 +17,9 @@ Fill in after task 1.2 with `npm ls --depth=0`.
 - @capacitor-mlkit/translation: 8.2.2
 - @capacitor-community/text-to-speech: 8.0.2
 - @capacitor/preferences: 8.0.1
+- @capacitor-mlkit/language-identification: 8.2.2
+- @capawesome/capacitor-photo-manipulator: 0.1.2
+- @capacitor/filesystem: 8.1.5 (approved 2026-11-08 — history image copies only)
 
 ## Test device
 - Phone model: Vivo V2301A (adb serial 10AE2P16UF005UG)
@@ -32,6 +35,15 @@ Append one line per task: `date — task id — short note`.
 - 2026-11-06 — 1.3 — blank app installed and launched on Vivo V2301A (verified: PID running, .MainActivity foreground)
 - 2026-11-06 — 1.4 — folder structure created (models, services skeletons, pages/translate + pages/history), routes `''→translate`, `history`; starter `home/` removed; `LANGUAGES` constant + `HistoryItem` defined; e2e test rewritten for navigation and passing (Playwright chromium installed); build + unit tests pass
 - 2026-11-06 — 2.1 — OcrService.capture() (takePhoto/chooseFromGallery, cancel→null, errors→toast) + temporary test buttons; verified on device: photo, gallery, and cancel all behave correctly
+- 2026-11-07 — 2.2 — OcrService.recognize() (`processImage({ path, script: Latin })` + `toImageUri` file:// fix); English photo → readable text, no-text photo → toast; image input recorded in Q1
+- 2026-11-07 — 2.3 — TranslationService (isModelDownloaded/downloadModel/ensureModels/translate); en→tl model downloads and translation appears; Q2 recorded; required the requireWifi patch + zombie DownloadManager row cleanup (see Differences)
+- 2026-11-07 — 2.5 — full pipeline works end to end on device: capture → OCR → editable text → translate → speak
+- 2026-11-07 — plan — user approved new core-pipeline tasks 2.6 (crop), 2.7 (language detection), 2.8 (voice selection) and two new plugins (see tech-stack §2); agents.md §4 detection prohibition lifted
+- 2026-11-08 — 2.6 — crop modal built (photo-manipulator + drag-rect overlay); user-tested repeatedly (crop → OCR works); Q7 answered
+- 2026-11-08 — 2.7 — LanguageDetectionService (always-on under Auto-detect); CJK detection verified on device (ja/zh/ko); Q8 answered (`fil` for Tagalog)
+- 2026-11-08 — 2.8+3.2+extras — voice index bug fixed (filtered vs full-list index: "Filipino" was sending 0=Afrikaans; real index 61); voice pickers REMOVED per user → auto voice by language (localService-first) + "Speak original" button added; language row (From/To/swap, 9 languages + Auto-detect) praised by user; added Japanese/Chinese/Korean (rules amended: agents.md §4, tech-stack §4); OCR multi-script fallback (Latin first, then JP/ZH/KO longest-wins); Filipino accent = device limitation (Q9)
+- 2026-11-08 — F1/F2/H1/H2 — **Speak bug root cause:** `TextToSpeech.speak` had no timeout and could hang → `status` stuck `'speaking'` → `busy()` blocked every button (speak-original "bugging", esp. as a follow-on after one hang) and `stop()` never reset the status. Fixed: `withTimeout` in `SpeechService.speak/stop`, `stopSpeaking()` forces idle + `speakGen` invalidates stale finally-blocks, `openInstall()` fire-and-forget. Two-way speak buttons (both), standalone Stop removed. Added `previewSrc` placeholder (cropped image), `HistoryService` (Preferences, dedupe, pending-load), Save-to-History button (resolved codes), History list/tap-loads-into-form/swipe-delete/Clear-all+alert. All verified on device: EN+JA speak round-trips, spinner always clears, save/dup toasts, restart persistence, tap→form, delete/clear, form snapshot restored. `ion-textarea` is light-DOM in Ionic 9 (no `shadowRoot`) — set `.value` + dispatch `ionInput` CustomEvent for automation. Note: photo preview cannot be restored externally after a history tap-test clears it (cache file lives until next app launch).
+- 2026-11-08 — A1+A2 — Translate page reordered exactly as user specified (placeholder top → buttons → language row → Text → [Translate|Speak original] → Translation → spinner → [Speak|Save]); always-visible placeholder with empty state (dashed box + icon + "Photo will appear here"). Installed `@capacitor/filesystem@8.1.5` (user-approved; tech-stack/agents/architecture amended); `HistoryItem.image?` + `previewPath` raw-path signal; Save copies photo cache file → `Directory.Data/linguo-history/<uuid>.jpg`; delete/clear/trim remove files; tap restores image via `getUri` + `convertFileSrc`. Verified full cycle on device: crop→Save→stat(3.6 MB)→restart→tap→img naturalWidth 3672→delete→file gone. Known traits: cropped images are stored FULL-RES (3.6 MB observed; ~50 × few MB worst case — optional future: resize-on-save via photo-manipulator `resize`); `saved-no-image` toast branch and clear-all file loop not exercised on device (code paths simple, logged). Vivo photo picker automation: tiles are `android.view.View` with `content-desc=",,Image N,,<date>"` — tap tile centers directly; picker overlay "Secure access to Photos" sits above the grid. User tested in parallel — their entries preserved (one re-saved by them during restart window). Note: package scope is `@capacitor-mlkit/*` (hyphen) everywhere — trust tech-stack/progress files over any slash rendering.
 
 ## In progress
 (none)
@@ -41,22 +53,40 @@ Format: `id — description — status (open/fixed) — fix`.
 - B1 — Gradle build fails: all five plugins require a Java 21 toolchain (`kotlin { jvmToolchain(21) }` / `VERSION_21`), machine has only JDK 22, 24, and Android Studio JBR 25 (Gradle 8.14.3 rejects Java 25: "Unsupported class file major version 69"). Error: "Cannot find a Java installation ... matching: {languageVersion=21} ... Toolchain download repositories have not been configured." — status: **fixed** — fix: added `org.gradle.toolchains.foojay-resolver-convention` 1.0.0 to `android/settings.gradle`; Gradle auto-provisioned Temurin 21 into `~/.gradle/jdks`. `assembleDebug` now BUILD SUCCESSFUL.
 
 ## Open questions (answer by testing on device; do not guess)
-- [ ] Q1: What image input does the OCR plugin accept (file path vs base64)? → Answer:
-- [ ] Q2: Does the translation plugin report model download progress? → Answer:
-- [ ] Q3: Which TTS language tag works for Tagalog on the test phone (`fil-PH`, `tl-PH`, none)? → Answer:
-- [ ] Q4: Are all five plugins compatible with the installed Capacitor major version? → Answer:
-- [ ] Q5: Do all six languages in `tech-stack.md` section 4 translate correctly with the plugin's `Language` enum? → Answer:
+- [x] Q1: What image input does the OCR plugin accept (file path vs base64)? → Answer: local file path — `processImage({ path })` takes a `file:///...` URI (installed types: "Local file path to the image"); use Camera `MediaResult.uri`.
+- [x] Q2: Does the translation plugin report model download progress? → Answer: no — no progress listener exists; indeterminate spinner only.
+- [x] Q3: Which TTS language tag works for Tagalog on the test phone (`fil-PH`, `tl-PH`, none)? → Answer: all of `fil-PH`, `tl-PH`, `fil`, `tl` report `isLanguageSupported: true`. The device ships exactly ONE Filipino voice: `voiceURI: "fil"`, name "Filipino", lang `fil`, localService true (verified via CDP `getSupportedVoices`, 275 voices total).
+- [x] Q4: Are all five plugins compatible with the installed Capacitor major version? → Answer: yes — all five declare `peerDependencies: @capacitor/core >=8.0.0`; Capacitor 8.6.0 installed; Gradle build passes.
+- [x] Q5: Do all six languages in `tech-stack.md` section 4 translate correctly with the plugin's `Language` enum? → Answer: enum members verified in installed types: `English='en'`, `Tagalog='tl'`, `Spanish='es'`, `French='fr'`, `German='de'`, `Indonesian='id'` (runtime translation test is task 2.3).
+- [x] Q6: Does `speak({ voice: <index> })` accept indexes from `getSupportedVoices()` on the test device (and does `voice` interact correctly with `lang`)? → Answer: index must be into the FULL list from `getSupportedVoices()` (plugin sorts by internal `voice.getName()`, see `TextToSpeech.java getSupportedVoicesOrdered`); `setVoice` OVERRIDES `lang` when voice >= 0. Filipino voice = full-list index 61 of 275. Fixed: SpeechService.getVoices now returns the original full-list index (was a filtered-index bug — selecting "Filipino" at filtered index 0 sent 0 = Afrikaans). App default-selects index 61.
+- [x] Q7: Does the OCR plugin accept photo-manipulator's cache output `path`? → Answer: yes — full pipeline (crop → OCR) works on device (user-tested across sessions, no path errors).
+- [x] Q8: Which tag does language identification return for Tagalog text — `tl`, `fil`, or something else? → Answer: **`fil`** (CDP test 2026-11-08; mapped via detectTags `['tl','fil']`). CJK verified too: ja→`ja`, zh→`zh`, ko→`ko`.
+- [x] Q9: How many voices per language does the test device have? → Answer: exactly ONE per language (275 total, all localService); Filipino = single voice `fil`. Manual voice pickers removed per user (2026-11-08) — `SpeechService.speak` auto-picks: localService match → any match → locale-tag fallback. Filipino accent is capped by this single device voice; only upgrade path is Google voice data via `openInstall()` (needs internet) — recorded as a device limitation, not a bug.
 
 ## Differences between docs and real plugin APIs
 Record any place where a plugin's real API differs from `architecture.md` or `tech-stack.md`.
 - `agents.md` section 5 says import Ionic components from `@ionic/angular/standalone`, but Ionic 9.0.10 has no `./standalone` export (verified in node_modules). The official starter and the `ionic-design` skill import from `@ionic/angular` instead — this is the path that compiles; use it.
 - Capacitor 8: `npx cap add android` fails until `@capacitor/android` is installed via npm (done in task 1.1).
 - `architecture.md` §5 says `capture(): Promise<Photo | null>` opens a camera/gallery "source prompt". The installed Camera plugin 8.2.6 removed `CameraSource.Prompt` and `getPhoto` (deprecated) — real API is `takePhoto()` / `chooseFromGallery()` (`MediaResult`, `uri?: string`). Implemented `capture(source: 'camera' | 'gallery'): Promise<MediaResult | null>`; cancel error codes return `null`.
+- `agents.md` §2 points at `docs/` for per-plugin API files; the actual location is `context/documentation/` (camera.md, text-recognition.md, translation.md, text-to-speech.md, preferences.md, language-identification.md, photo-manipulator.md). agents.md updated 2026-11-07.
+- Translation model download does NOT involve Google Play services: the bundled ML Kit variant (`com.google.mlkit:translate`) fetches `en_tl.zip` etc. via the Android system `DownloadManager` from `redirector.gvt1.com`. Download bytes show up under the downloads-provider uid (10037), not the app's uid — don't misread `netstats` as "app didn't download".
+- Translation plugin 8.2.2 Android source called `requireWifi()` in `downloadModel`, which made every model download wait forever on this LTE-only setup (JobScheduler job constrained on WIFI). Fixed with patch-package: `patches/@capacitor-mlkit+translation+8.2.2.patch` removes the requireWifi call (also verified in the compiled dex); `"postinstall": "patch-package"` in package.json keeps it applied across installs. Fresh downloads now create INTERNET-only jobs that run on LTE.
+- Early failed download attempts left a zombie DownloadManager row (`downloading_model_id_COM.GOOGLE.BASE_TRANSLATE:en_tl`) that all later download enqueues re-attached to, so retries never started. Clearing via `Translation.deleteDownloadedModel()` from an in-app CDP call (Playwright helper `cdp-tmp.cjs`) cancelled the pending row; afterwards a fresh enqueue ran normally.
+- JobScheduler also refuses jobs while thermal status ≥ 2 ("Restricted due to: thermal"), which looks identical to a Wi-Fi constraint failure in `dumpsys jobscheduler`. Unlock with `cmd thermalservice override-status 1` (check with `dumpsys thermalservice | grep -a -A2 Override`), reset with `cmd thermalservice reset`. Override currently ACTIVE (kept on — tasks 2.6–2.8 may download more models; reset when done with device testing).
+- `docs/text-recognition.md` FAQ and installed types agree: `processImage` takes only a local file path — no base64/`data:` input (this is why the crop step must go through photo-manipulator's file output).
+- `context/documentation/filesystem.md` vs installed `@capacitor/filesystem@8.1.5`: NO differences found — `copy({from, to, directory?, toDirectory?})`, `deleteFile`, `mkdir({recursive})`, `getUri`, `stat`, and error codes (`OS-PLUG-FILE-0010` exists / `0008` not found) match the types exactly. Confirmed on device: mkdir+recursive+copy+getUri+stat+deleteFile all behave per doc.
+- Package scope check: all ML Kit plugins are `@capacitor-mlkit/*` (hyphen scope, e.g. `node_modules/@capacitor-mlkit/translation`) — as written in tech-stack/progress; the filesystem plugin is `@capacitor/filesystem` (no hyphen). Watch for slash/hyphen misreadings when editing docs.
 
 ## Notes for next session
+- Next: task 5.1 — run every row of `testing.md` on device and record Pass/Fail (then 5.2 fix failures, 5.3 fill Limitations/Suggested improvement).
+- New-stack reminder: `@capacitor/filesystem` is allowed ONLY for history image copies in `Directory.Data` (tech-stack §2/§3, agents.md §4 exception) — do not use it for other features without asking.
+- Device access: adb may be wireless — `adb connect 10.99.157.95:5555` (hotspot IP; changes if the hotspot restarts). Prefix adb shell commands with `MSYS_NO_PATHCONV=1`. logcat is blocked by the Vivo ROM — diagnose via toasts, `uiautomator dump`, `dumpsys`. Playwright CDP scripts outside the project need `NODE_PATH=<project>/node_modules`.
+- Thermal override is ACTIVE on the test phone (needed for model downloads over LTE). Reset with `cmd thermalservice reset` when device testing is finished for good.
+- `cdp-tmp.cjs` (project root) is a Playwright CDP helper for calling Capacitor plugins inside the running app (re-forward `adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>` after every app restart). Delete it when no longer needed.
+- `patches/@capacitor-mlkit+translation+8.2.2.patch` + the `postinstall` script are load-bearing — do not remove them or Tagalog downloads break again.
 - Skills installed at `.agents/skills/capacitor-plugins/` and `.agents/skills/ionic-angular/` (project scope, copied not symlinked). Security scan: Safe / 0 Socket alerts / Low Snyk risk. `capacitor-plugins` SKILL.md mentions optional Capawesome MCP servers and a licensed npm registry auth token — not needed for this project; ignore per `agents.md` section 9.
 - `ionic-design` installed at `.agents/skills/ionic-design/` (from `cap-go/capacitor-skills`, project scope). Security scan clean; SKILL.md + all 3 references checked — no Tailwind/Konsta/Material pushes, no NgModules requirement, no secrets, only ionicframework.com/github.com links. Note: the skill claims Ionic 9 moved standalone imports from `@ionic/angular/standalone` to `@ionic/angular` — verify the installed Ionic major at task 1.2 before relying on either path. `frontend-design` (anthropics/skills) NOT installed — `install-skills.md` says only on explicit request.
 - `ionic build` prints a non-fatal browserslist warning (starter's default `.browserslistrc` lists browsers older than Angular 22 supports). Harmless; build succeeds. Do not "fix" without asking.
 - Gradle on this machine MUST run with `JAVA_HOME="C:\Program Files\Java\jdk-24"` (e.g. `export JAVA_HOME="C:\Program Files\Java\jdk-24" && ./gradlew assembleDebug` from `android/`). Android Studio's JBR is Java 25 — Gradle 8.14.3 rejects it. Toolchain JDK 21 is auto-provisioned by foojay into `~/.gradle/jdks`.
 - `android/` is NOT yet tracked in git — teammates won't get the foojay fix or the platform until it's committed (await user's explicit request to commit). First Gradle build per machine downloads deps + a JDK 21 (~200 MB).
-- APK is 117 MB — ML Kit bundles all five OCR script models plus native OCR/translate libs. Expected per `docs/text-recognition.md`; do not try to shrink.
+- APK is 117 MB — ML Kit bundles all five OCR script models plus native OCR/translate libs. Expected per `context/documentation/text-recognition.md`; do not try to shrink.

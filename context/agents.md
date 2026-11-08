@@ -16,7 +16,8 @@ Two screens: `translate` (main) and `history`. This is a small school project me
    - `tech-stack.md` — allowed packages, config, language codes.
    - `testing.md` — device test checklist.
    - `design.md` — UI rules (theme, layout, states). Read BEFORE any UI work.
-   - `docs/` — API reference per plugin: `camera.md`, `text-recognition.md`, `translation.md`, `text-to-speech.md`, `preferences.md`. Read the relevant file BEFORE writing any code that calls that plugin.
+   - `collaboration.md` — setup/build/deploy guide for human collaborators (environment facts overlap with this file).
+   - `context/documentation/` — API reference per plugin: `camera.md`, `text-recognition.md`, `translation.md`, `text-to-speech.md`, `preferences.md`, `language-identification.md`, `photo-manipulator.md`, `filesystem.md`. Read the relevant file BEFORE writing any code that calls that plugin.
 
 ## 3. Session protocol
 1. Do exactly ONE task from `implementation-plan.md`.
@@ -29,10 +30,10 @@ Two screens: `translate` (main) and `history`. This is a small school project me
 - MUST target Android only.
 - MUST use only the packages listed in `tech-stack.md`. MUST ask before adding any other dependency.
 - MUST NOT add a backend, `HttpClient`, online translation APIs, SQLite, or any database.
-- MUST NOT add auto language detection, live camera translation, handwriting recognition, or non-Latin-script languages.
-- MUST NOT store captured images. Only text is saved.
-- MUST NOT guess plugin method names or options. Before using a plugin, read its file in `docs/`, then verify against the type definitions in `node_modules/<package>/`. If they differ, the installed types win; record the difference in `progress.md`.
-- MUST NOT use deprecated Camera methods (`getPhoto`, `pickImages`). Use `takePhoto` and `chooseFromGallery` (see `docs/camera.md`).
+- MUST NOT add live camera translation or handwriting recognition. Non-Latin-script languages are allowed ONLY for Japanese, Chinese, and Korean (user request 2026-11-08); all other languages stay Latin-script only (`tech-stack.md` section 4). Auto language detection is allowed ONLY through `@capacitor-mlkit/language-identification` (approved 2026-11-07), limited to the languages in `tech-stack.md` section 4; `'und'` and unsupported results must fall back to manual selection (see `context/documentation/language-identification.md`).
+- MUST NOT store captured images. Only text is saved. **Exception (user request 2026-11-08):** a save to History also copies the current photo into app-private storage (`Directory.Data/linguo-history/`, see `architecture.md`) — images are never stored anywhere else, never leave the device, and are deleted with their history entry.
+- MUST NOT guess plugin method names or options. Before using a plugin, read its file in `context/documentation/`, then verify against the type definitions in `node_modules/<package>/`. If they differ, the installed types win; record the difference in `progress.md`.
+- MUST NOT use deprecated Camera methods (`getPhoto`, `pickImages`). Use `takePhoto` and `chooseFromGallery` (see `context/documentation/camera.md`).
 - MUST NOT invent behavior that is listed as an open question in `progress.md`. Test it, or ask the user.
 - MUST NOT silently swallow errors. Show an Ionic toast for every user-facing failure.
 - MUST NOT refactor unrelated code while doing a task.
@@ -71,4 +72,4 @@ Installed skills: `capacitor-plugins`, `ionic-angular`, `ionic-design`.
 - Use `ionic-angular` when working on Ionic/Angular structure, navigation, or lifecycle hooks.
 - Use `ionic-design` when building or changing UI, together with `design.md`.
 - Priority: `agents.md`, `tech-stack.md`, and `design.md` ALWAYS override a skill. If a skill suggests a package, version, library, or feature that is not allowed in `tech-stack.md` or is forbidden in `agents.md` or `design.md`, ignore that suggestion and tell the user.
-- Skills do not replace reading the relevant file in `docs/` and the type definitions in `node_modules/<package>/` before using a plugin.
+- Skills do not replace reading the relevant file in `context/documentation/` and the type definitions in `node_modules/<package>/` before using a plugin.

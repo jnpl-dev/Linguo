@@ -10,7 +10,7 @@ Services (inject(), async/await)
    ↓ call
 Capacitor plugins (Camera, ML Kit OCR, ML Kit Translation, TTS, Preferences)
    ↓
-Device (photo, models, history JSON)
+Device (photo, models, history JSON, history image copies)
 ```
 No backend. No database. Pages never call plugins directly; they call services.
 
@@ -67,6 +67,7 @@ export interface HistoryItem {
   sourceLang: string;    // mlkitCode
   targetLang: string;    // mlkitCode
   createdAt: number;     // Date.now()
+  image?: string;        // relative path under Directory.Data, e.g. `linguo-history/<id>.jpg` (absent for typed-only entries)
 }
 ```
 
@@ -96,10 +97,10 @@ The supported language list lives in `tech-stack.md` section 4. Define it once a
 ### HistoryService
 - `items = signal<HistoryItem[]>([])` (newest first)
 - `load(): Promise<void>` — reads from Preferences into the signal. Call once at app start and when HistoryPage opens.
-- `add(item: Omit<HistoryItem,'id'|'createdAt'>): Promise<void>` — adds to the front, trims to max 50 items, persists.
-- `remove(id: string): Promise<void>`
-- `clear(): Promise<void>`
-- Storage: `@capacitor/preferences`, key `linguo_history`, value is a JSON string of `HistoryItem[]`.
+- `add(entry): Promise<SaveResult>` — dedupe by the 4 text/language fields first; then, when `imageSource` (the current photo's cache path) is given, copies it to `linguo-history/<id>.jpg` under `Directory.Data` and stores the relative path in `item.image`. Copy failure still saves the text entry and returns `'saved-no-image'` (page shows a toast). Adds to the front, trims to max 50 (dropped entries' image files are deleted), persists.
+- `remove(id): Promise<void>` / `removeMany(ids): Promise<void>` — also delete the entries' image files in the same operation (missing file code `OS-PLUG-FILE-0008` is ignored; other failures are logged). `removeMany` does one persist for the whole batch (used by the History page's multi-select delete). There is **no `clear()`** anymore (Clear all was removed by user decision 2026-11-08).
+- `resolveImage(rel): Promise<string | null>` — `getUri` for a stored image (null when the file is gone); the page runs the result through `Capacitor.convertFileSrc` for display.
+- Storage: `@capacitor/preferences` (key `linguo_history`, JSON string of `HistoryItem[]`) + `@capacitor/filesystem` (`Directory.Data`, folder `linguo-history/`) for the image copies. Cache paths are never stored — the photo-manipulator cache is wiped on every app launch.
 - If stored JSON is missing or corrupt, treat as an empty list. Do not crash.
 
 ## 6. Data flow: main pipeline
@@ -109,39 +110,46 @@ The supported language list lives in `tech-stack.md` section 4. Define it once a
 3. `OcrService.recognize(photo)` → set `recognizedText`.
    - Empty result → toast "No text found. You can type text manually."
 4. User may edit `recognizedText` in the textarea.
-5. User taps **Translate** (disabled when text is empty or languages are equal):
+5. User taps **Translate** (disabled when text is empty, languages are equal, or the form shows a loaded history entry):
    1. `TranslationService.ensureModels(source, target)` (status `downloading`; needs internet the first time; on failure toast "Could not download language model. Check your internet connection.").
    2. `TranslationService.translate(...)` → set `translatedText`.
-   3. `HistoryService.add(...)` automatically.
-6. User taps **Speak** → `SpeechService.speak(translatedText, targetLanguage)`. **Stop** calls `SpeechService.stop()`.
+   3. Nothing is saved automatically — the user taps **Save to History** (`HistoryService.add(...)`) when they want to keep the pair.
+6. Speak controls are two-way (user decision 2026-11-08): tapping **Speak** / **Speak original** calls `SpeechService.speak(...)`; while it plays, that same button becomes **Stop speaking** and calls `SpeechService.stop()`. The other speak button is disabled during playback.
 
 Manual path: the user can skip steps 2–3 and type text directly, then Translate.
+
+History path: tapping a History row queues the entry (`HistoryService.setPending`); the Translate page's `ionViewWillEnter` fills the form, sets `loadedFromHistory` (all editing controls disabled, action button shows **Translate new**), and **Translate new** clears the content and re-enables editing.
 
 ## 7. Screens
 
 ### 7.1 Translate page (`translate`)
-State (signals): `sourceLang`, `targetLang`, `recognizedText`, `translatedText`, `status` (`'idle' | 'recognizing' | 'downloading' | 'translating' | 'speaking'`).
+State (signals): `sourceCode`, `targetCode`, `recognizedText`, `translatedText`, `detectedLang`, `previewSrc`/`previewPath` (photo), `cropOpen`/`cropSrc`/`rect` (crop modal), `speakingWhich` (`'original' | 'translated' | null`), `loadedFromHistory`, `status` (`'idle' | 'recognizing' | 'detecting' | 'downloading' | 'translating' | 'speaking'`).
 
-Layout, top to bottom:
+Layout, top to bottom (final order, user decision 2026-11-08 third round):
 1. Header: title "Linguo", button to History.
-2. Row: source language select, swap button, target language select.
-3. **Take Photo** button.
-4. Textarea bound to `recognizedText` (placeholder: "Take a photo or type text here").
-5. **Translate** button.
-6. Result card showing `translatedText`, with **Speak** and **Stop** buttons (visible only when `translatedText` is non-empty).
+2. Image placeholder (always visible; empty state or preview of the current photo).
+3. **Take Photo** + **Choose from Gallery** (stacked, block buttons).
+4. Textarea bound to `recognizedText` + optional "Detected: X" caption.
+5. Row: source language select, swap button, target language select (+ same-language hint).
+6. Row: **Translate** + **Speak original**.
+7. Textarea bound to `translatedText`.
+8. Spinner + status line while busy.
+9. Row: **Speak** + **Save to History** (or **Translate new** when `loadedFromHistory`).
 
 Behavior rules:
-- Swap button swaps `sourceLang` and `targetLang`; if `translatedText` exists, also swap the texts.
-- While `status` is not `idle`, disable the buttons and show an `ion-spinner` with a short label ("Reading text…", "Downloading language model…", "Translating…").
-- Initial languages: source English, target Tagalog.
+- Swap button swaps source and target languages and swaps the two texts (disabled while busy or while showing a loaded entry).
+- While `status` is not `idle`, disable the buttons and show an `ion-spinner` with a short label ("Reading text…", "Detecting language…", "Downloading language model…", "Translating…").
+- Initial languages: source **Auto-detect**, target Tagalog.
+- Loaded-from-history (`loadedFromHistory`): Text, Translation, language selects, swap, Take Photo, Choose from Gallery, and Translate are disabled; Speak stays enabled; the action button is **Translate new**, which clears text, translation, detected caption, and image (keeps languages) and flips `loadedFromHistory` back to false.
+- Crop modal (`ion-modal`, open after capture): drag frame → **Crop** / **Use full photo** / **Retake**; crop/OCR errors show toasts (see design.md §6).
 
 ### 7.2 History page (`history`)
-- `ion-list` of items, newest first. Each row shows: first line of source text, first line of translated text, language pair (e.g. "EN → TL"), date.
-- Tap a row: open an `ion-modal` or expand to show full original and translated text, with a **Speak** button.
-- Swipe (`ion-item-sliding`) to delete one item.
-- Header button **Clear all** with an `ion-alert` confirmation.
+- `ion-list` of items, newest first (`HistoryService.items`, loaded in the constructor). Each row shows: translated text, source text, language pair (e.g. "EN → TL"), date.
+- Tap a row (normal mode): queue the entry (`setPending`) and navigate to `/translate` — the form loads it read-only with **Translate new** (no modal).
+- Swipe (`ion-item-sliding`) deletes one item (+ its image), with a success toast. Swipe options are hidden while selecting.
+- Long-press (~500 ms, no scroll) opens **selection mode**: checkboxes appear, header becomes cancel + "N selected" + **Select all/Deselect** + trash; trash → `ion-alert` confirm → `HistoryService.removeMany(ids)` → toast → exit. Unchecking the last row exits automatically.
+- **No "Clear all" button** and no `HistoryService.clear()` (removed by user decision 2026-11-08).
 - Empty state: "No saved translations yet."
-- Call `HistoryService.load()` in `ionViewWillEnter`.
 
 ## 8. Error handling rules
 - Services throw; pages catch and call a shared helper to show a toast.

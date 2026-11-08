@@ -1,0 +1,90 @@
+{
+  "hash": "0f311cd6",
+  "configHash": "fb871fac",
+  "lockfileHash": "ac519628",
+  "browserHash": "fdf3e329",
+  "optimized": {
+    "@angular/core": {
+      "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "942a96f2",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "1cc58601",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "d98c0e84",
+      "needsInterop": false
+    },
+    "@ionic/angular": {
+      "src": "../../../../../../node_modules/@ionic/angular/dist/standalone/index.js",
+      "file": "@ionic_angular.js",
+      "fileHash": "328b729e",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "core-MDGYZclY": {
+      "file": "core-MDGYZclY.js",
+      "isDynamicEntry": false
+    },
+    "p-BBsseItU-DHB9mKO-": {
+      "file": "p-BBsseItU-DHB9mKO-.js",
+      "isDynamicEntry": true
+    },
+    "p-BMPN55of-Bt4HbXz4": {
+      "file": "p-BMPN55of-Bt4HbXz4.js",
+      "isDynamicEntry": false
+    },
+    "p-BWbz71uB-BcsYUYUL": {
+      "file": "p-BWbz71uB-BcsYUYUL.js",
+      "isDynamicEntry": true
+    },
+    "p-CUQjkOdi-BI1Rzy4w": {
+      "file": "p-CUQjkOdi-BI1Rzy4w.js",
+      "isDynamicEntry": false
+    },
+    "p-Ct2aBEue-sxnhhSjR": {
+      "file": "p-Ct2aBEue-sxnhhSjR.js",
+      "isDynamicEntry": false
+    },
+    "p-D0YpjgON-DlbOmPwz": {
+      "file": "p-D0YpjgON-DlbOmPwz.js",
+      "isDynamicEntry": false
+    },
+    "p-D5_mEbGJ-G80IQrlu": {
+      "file": "p-D5_mEbGJ-G80IQrlu.js",
+      "isDynamicEntry": false
+    },
+    "p-DaojW_d_-CB-RpAWF": {
+      "file": "p-DaojW_d_-CB-RpAWF.js",
+      "isDynamicEntry": true
+    },
+    "p-Ds5vN3iu-CQD5RS9Q": {
+      "file": "p-Ds5vN3iu-CQD5RS9Q.js",
+      "isDynamicEntry": true
+    },
+    "p-LkEGRiq0-BUULEC9K": {
+      "file": "p-LkEGRiq0-BUULEC9K.js",
+      "isDynamicEntry": false
+    },
+    "p-ZjP4CjeZ-BnW-oeAv": {
+      "file": "p-ZjP4CjeZ-BnW-oeAv.js",
+      "isDynamicEntry": false
+    },
+    "platform-browser-BaYq6G3h": {
+      "file": "platform-browser-BaYq6G3h.js",
+      "isDynamicEntry": false
+    },
+    "router-s5Kd4hW1": {
+      "file": "router-s5Kd4hW1.js",
+      "isDynamicEntry": false
+    }
+  }
+}

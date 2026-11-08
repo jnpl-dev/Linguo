@@ -8,7 +8,183 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-button expand="block" (click)="takePhoto()">Take Photo</ion-button>
-  <ion-button expand="block" fill="outline" (click)="chooseFromGallery()">Choose from Gallery</ion-button>
-  <p>{{ photoStatus() }}</p>
+  <div class="preview-wrap" [class.is-empty]="!previewSrc()">
+    @if (previewSrc(); as img) {
+    <img [src]="img" class="preview" alt="Photo being translated" />
+    } @else {
+    <div class="preview-empty">
+      <ion-icon name="image-outline"></ion-icon>
+      <span>Photo will appear here</span>
+    </div>
+    }
+  </div>
+
+  <ion-button expand="block" (click)="takePhoto()" [disabled]="busy() || loadedFromHistory()">Take Photo</ion-button>
+  <ion-button expand="block" fill="outline" (click)="chooseFromGallery()" [disabled]="busy() || loadedFromHistory()"
+    >Choose from Gallery</ion-button
+  >
+
+  <ion-textarea
+    label="Text"
+    labelPlacement="stacked"
+    rows="4"
+    placeholder="Take a photo or type text here"
+    [value]="recognizedText()"
+    (ionInput)="onTextInput($event)"
+    [disabled]="busy() || loadedFromHistory()"
+  ></ion-textarea>
+
+  @if (detectedLang(); as d) {
+  <p class="detected-caption">Detected: {{ d.label }}</p>
+  }
+
+  <div class="lang-row">
+    <ion-select
+      label="From"
+      labelPlacement="stacked"
+      interface="popover"
+      [value]="sourceCode()"
+      [disabled]="busy() || loadedFromHistory()"
+      (ionChange)="onSourceChange($event)"
+    >
+      <ion-select-option value="auto">Auto-detect</ion-select-option>
+      @for (l of languages; track l.mlkitCode) {
+      <ion-select-option [value]="l.mlkitCode">{{ l.label }}</ion-select-option>
+      }
+    </ion-select>
+    <ion-button fill="clear" class="swap-btn" aria-label="Swap languages" [disabled]="!canSwap()" (click)="swap()">
+      <ion-icon slot="icon-only" name="swap-horizontal"></ion-icon>
+    </ion-button>
+    <ion-select
+      label="To"
+      labelPlacement="stacked"
+      interface="popover"
+      [value]="targetCode()"
+      [disabled]="busy() || loadedFromHistory()"
+      (ionChange)="onTargetChange($event)"
+    >
+      @for (l of languages; track l.mlkitCode) {
+      <ion-select-option [value]="l.mlkitCode">{{ l.label }}</ion-select-option>
+      }
+    </ion-select>
+  </div>
+  @if (sameLanguage()) {
+  <p class="lang-hint">Source and target languages must differ.</p>
+  }
+
+  <div class="btn-row">
+    <ion-button
+      class="btn-flex"
+      (click)="translate()"
+      [disabled]="busy() || loadedFromHistory() || !recognizedText().trim() || sameLanguage()"
+      >Translate</ion-button
+    >
+    @if (speakingWhich() === 'original') {
+    <ion-button class="btn-flex" fill="outline" color="danger" (click)="stopSpeaking()">Stop speaking</ion-button>
+    } @else {
+    <ion-button
+      class="btn-flex"
+      fill="outline"
+      (click)="speakOriginal()"
+      [disabled]="busy() || !recognizedText().trim()"
+      >Speak original</ion-button
+    >
+    }
+  </div>
+
+  <ion-textarea
+    label="Translation"
+    labelPlacement="stacked"
+    rows="4"
+    placeholder="Translated text appears here"
+    [value]="translatedText()"
+    (ionInput)="onTranslationInput($event)"
+    [disabled]="busy() || loadedFromHistory()"
+  ></ion-textarea>
+
+  @if (busy()) {
+  <p class="ion-text-center"><ion-spinner></ion-spinner> {{ statusLabel() }}</p>
+  }
+
+  <div class="btn-row">
+    @if (speakingWhich() === 'translated') {
+    <ion-button class="btn-flex" color="danger" (click)="stopSpeaking()">Stop speaking</ion-button>
+    } @else {
+    <ion-button class="btn-flex" (click)="speakTranslated()" [disabled]="busy() || !translatedText().trim()"
+      >Speak</ion-button
+    >
+    } @if (loadedFromHistory()) {
+    <ion-button class="btn-flex" fill="outline" (click)="translateNew()" [disabled]="busy()">Translate new</ion-button>
+    } @else {
+    <ion-button
+      class="btn-flex"
+      fill="outline"
+      (click)="saveHistory()"
+      [disabled]="busy() || !recognizedText().trim() || !translatedText().trim()"
+      >Save to History</ion-button
+    >
+    }
+  </div>
 </ion-content>
+
+<ion-modal [isOpen]="cropOpen()" (didDismiss)="onCropDismiss()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Crop photo</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding crop-content">
+      <div class="crop-stage">
+        <div class="crop-frame">
+          <img #cropImg [src]="cropSrc()" class="crop-img" alt="Photo to crop" draggable="false" />
+          <div
+            class="crop-rect"
+            [ngStyle]="{ 'left.%': rect().x * 100, 'top.%': rect().y * 100, 'width.%': rect().w * 100, 'height.%': rect().h * 100 }"
+            (pointerdown)="onDragStart($event, 'move')"
+            (pointermove)="onDragMove($event)"
+            (pointerup)="onDragEnd()"
+            (pointercancel)="onDragEnd()"
+          >
+            <span
+              class="handle nw"
+              (pointerdown)="onDragStart($event, 'nw')"
+              (pointermove)="onDragMove($event)"
+              (pointerup)="onDragEnd()"
+            ></span>
+            <span
+              class="handle ne"
+              (pointerdown)="onDragStart($event, 'ne')"
+              (pointermove)="onDragMove($event)"
+              (pointerup)="onDragEnd()"
+            ></span>
+            <span
+              class="handle sw"
+              (pointerdown)="onDragStart($event, 'sw')"
+              (pointermove)="onDragMove($event)"
+              (pointerup)="onDragEnd()"
+            ></span>
+            <span
+              class="handle se"
+              (pointerdown)="onDragStart($event, 'se')"
+              (pointermove)="onDragMove($event)"
+              (pointerup)="onDragEnd()"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <p class="ion-text-center crop-hint">Drag the frame around the text you want to read.</p>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button fill="outline" (click)="retake()">Retake</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button fill="outline" (click)="useFullPhoto()">Use full photo</ion-button>
+          <ion-button (click)="applyCrop()">Crop</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>

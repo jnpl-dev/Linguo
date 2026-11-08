@@ -29,24 +29,32 @@ Forbidden: Tailwind, Bootstrap, Konsta UI, Angular Material, custom web fonts, a
 ## 5. Screen guidance
 
 ### Translate page
-1. Language row: two `ion-select` controls (source, target) with a swap `ion-button` (icon only, `fill="clear"`, `aria-label="Swap languages"`) between them.
-2. Two buttons side by side or stacked: **Take Photo** (primary, camera icon) and **Choose from Gallery** (outline, image icon).
-3. `ion-textarea` for the recognized text: label "Text", at least 4 rows, auto-grow allowed, placeholder "Take a photo or type text here".
-4. **Translate** button: `expand="block"`, primary color. Disabled while empty, busy, or when both languages are the same (show a small hint under the language row).
-5. Result `ion-card`: translated text at a slightly larger font size (about 1.1 rem), then **Speak** (primary) and **Stop** (outline) buttons. Hide the card until a translation exists.
-6. Header: title "Linguo" and an icon button (clock/history icon, `aria-label="History"`) that opens History.
+Strict top-to-bottom order (user decision 2026-11-08, third round):
+1. **Image placeholder — always visible, page top.** Empty state: dashed-border box (~110px), `image-outline` icon, caption "Photo will appear here". With an image: plain `img`, max-height ~160px, rounded border, light background. Cleared on Retake, on **Translate new**, and when a history entry without an image is loaded.
+2. **Take Photo** (primary, `expand="block"`) and **Choose from Gallery** (outline, `expand="block"`), stacked.
+3. **Text** `ion-textarea` (label "Text", ≥4 rows, placeholder "Take a photo or type text here") with an optional "Detected: X" caption below it when auto-detect resolved the source language. **Text comes before the language row** (user decision 2026-11-08, third round).
+4. **Language row:** two `ion-select` controls (source, target) with a swap `ion-button` (icon only, `fill="clear"`, `aria-label="Swap languages"`) between them. Source has an "Auto-detect" option (default). Same-language hint appears under the row.
+5. **Button row:** **Translate** (primary) + **Speak original** (outline) side by side, equal widths (`display:flex` row).
+6. **Translation** `ion-textarea` (label "Translation", ≥4 rows).
+7. Spinner + status line while busy.
+8. **Button row:** **Speak** (primary) + **Save to History** (outline) side by side, equal widths. Save is enabled only when both texts exist.
+- Two-way speak: while audio plays, the button that started speaking becomes **Stop speaking** (`color="danger"`) and the other speaks button is disabled. No separate Stop button exists (user decision 2026-11-08).
+- **Loaded-from-history is read-only** (user decision 2026-11-08, third round): after a History tap fills the form, every editing control is disabled — Text, Translation, both language selects, swap, Take Photo, Choose from Gallery, and Translate — so a saved entry can never be silently modified. Speak buttons stay active. The action button reads **Translate new** instead of "Save to History"; pressing it clears text, translation, Detected caption, and the image (keeps the From/To languages) and re-enables all controls for a fresh translation.
+- Header: title "Linguo" and an icon button (clock/history icon, `aria-label="History"`) that opens History.
 
 ### History page
-- Header with back button, title "History", and a "Clear all" text button (hidden when empty).
-- `ion-list` of `ion-item-sliding` rows: two text lines (source, translated), each truncated to one line, plus a small secondary line with the language pair and date.
-- Swipe reveals a red **Delete** option (`color="danger"`).
-- Tap opens an `ion-modal` with full source text, full translated text, and a **Speak** button.
-- Empty state: centered icon, one line "No saved translations yet."
+- **Normal mode header:** back button + title "History". There is **no "Clear all"** button (user decision 2026-11-08, third round).
+- `ion-list` of `ion-item-sliding` rows: two text lines (source, translated), each truncated, plus a small secondary line with the language pair and date.
+- Swipe reveals a red **Delete** option (`color="danger"`). Deleting an entry also deletes its stored image file.
+- Tap loads both texts, both languages, and the entry's image (into the Translate placeholder) and navigates back (user decision 2026-11-08 — replaces the former ion-modal detail view; the loaded Translate form then acts read-only with **Translate new**).
+- **Selection mode** (user decision 2026-11-08, third round): press-and-hold a row (~500 ms, must not scroll) opens selection mode with that row checked; the checkbox appears for every row and a tap toggles it. Header becomes: cancel icon (exits, also used to deselect) + "N selected" title + **Select all / Deselect** toggle + trash icon. Trash shows an `ion-alert` ("Delete N entries?", Cancel + red Delete) → deletes the selected entries and their images in one operation → success toast → exits selection mode. Unchecking the last selected row exits selection mode automatically. Swipe Delete and tap-to-load are unavailable while selecting.
+- Entries saved from a photo carry their image (copied to `Directory.Data/linguo-history/`, user decision 2026-11-08); typed-only entries have none.
+- Empty state: centered text "No saved translations yet." plus one hint line.
 
 ## 6. States and feedback
 - Busy: show `ion-spinner` with a short label ("Reading text…", "Downloading language model…", "Translating…") and disable the buttons.
 - Errors and confirmations: `ion-toast` at the bottom, 3000 ms, short plain sentence. Use `color="danger"` for errors only.
-- Destructive actions (Clear all): `ion-alert` with Cancel and a red confirm button.
+- Destructive actions (multi-select Delete, future deletes): `ion-alert` with Cancel and a red confirm button. Single swipe-delete acts immediately with a success toast (existing behavior).
 - Never leave the screen blank or frozen; every async action has a visible busy state that always ends.
 
 ## 7. Accessibility

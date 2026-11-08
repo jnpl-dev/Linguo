@@ -1,1 +1,135 @@
-/* Translate page styles — built in Phase 3. */
+/* Translate page styles — built in Phase 3; Phase 2 crop UI below. */
+
+.lang-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.lang-row ion-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.swap-btn {
+  --padding-start: 4px;
+  --padding-end: 4px;
+  height: 44px;
+}
+
+.lang-hint {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: var(--ion-color-warning-shade, #b45309);
+}
+
+.detected-caption {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.preview-wrap {
+  margin: 0 0 8px;
+  border: 1px solid var(--ion-color-step-200, #d7d8da);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ion-color-step-50, #f4f5f8);
+}
+
+.preview-wrap.is-empty {
+  border-style: dashed;
+  border-color: var(--ion-color-step-300, #c8c9cc);
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 110px;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+.preview-empty ion-icon {
+  font-size: 32px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-row .btn-flex {
+  flex: 1;
+  margin: 0;
+}
+
+.crop-content {
+  --background: var(--ion-color-step-100, #f4f5f8);
+}
+
+.crop-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.crop-frame {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+}
+
+.crop-img {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.crop-rect {
+  position: absolute;
+  border: 2px solid var(--ion-color-primary);
+  background: rgba(13, 148, 136, 0.12);
+  box-sizing: border-box;
+  touch-action: none;
+  cursor: move;
+}
+
+.handle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: var(--ion-color-primary);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  touch-action: none;
+  cursor: grab;
+}
+
+.handle.nw { left: -15px; top: -15px; }
+.handle.ne { right: -15px; top: -15px; }
+.handle.sw { left: -15px; bottom: -15px; }
+.handle.se { right: -15px; bottom: -15px; }
+
+.crop-hint {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}

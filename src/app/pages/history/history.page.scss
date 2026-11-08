@@ -1,1 +1,47 @@
-/* History page styles — built in Phase 4. */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  color: var(--ion-color-medium);
+  text-align: center;
+}
+
+.empty-hint {
+  font-size: 0.9rem;
+}
+
+/* Selection mode: the whole row toggles the checkbox, so the control itself must not take taps. */
+ion-item ion-checkbox {
+  pointer-events: none;
+}
+
+ion-item.selected {
+  --background: var(--ion-color-step-100, #f4f5f8);
+}
+
+.hist-label h2,
+.hist-label .source {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hist-label h2 {
+  font-weight: 600;
+}
+
+.hist-label .source {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+.hist-label .meta {
+  font-size: 0.78rem;
+  color: var(--ion-color-medium);
+  margin-top: 4px;
+}

@@ -4,6 +4,8 @@
 **App name:** Linguo
 **Suggested app ID:** `com.yourname.linguo` (set once at project creation; do not change later)
 
+> **Amended 2026-11-08:** this brief has been aligned with the delivered app where the user changed scope (manual save, multi-select delete instead of Clear all, language detection, CJK languages, history image copies). Changed lines are marked *(amended)*.
+
 ## 1. Project Overview
 
 ### 1.1 Project Description
@@ -93,12 +95,12 @@ The application saves translations locally so users can revisit them.
 
 Functionalities:
 
-- Automatically save each successful translation.
+- Save a translation on demand with a **Save to History** button *(amended: manual save; no auto-save)*.
 - Display a list of saved translations (newest first).
-- Open a saved translation to view the full original and translated text.
+- Open a saved translation to view the full original and translated text *(amended: opens read-only in the Translate screen, with a "Translate new" action)*.
 - Speak a saved translation again.
-- Delete a single saved translation.
-- Clear all history.
+- Delete a single saved translation (swipe).
+- Select several entries by pressing and holding a row, then delete them together with confirmation *(amended: replaces "Clear all history").*
 
 No backend database or cloud storage will be required.
 
@@ -120,7 +122,7 @@ Components:
 - Editable recognized-text field.
 - Translate button.
 - Translated text display.
-- Speak and Stop buttons.
+- Speak and Stop controls *(amended: one two-way button per text — it turns into "Stop speaking" while playing)*.
 - Link to History.
 - Empty state, loading states, and error messages.
 
@@ -131,10 +133,10 @@ Purpose: Display and manage previously saved translations.
 Components:
 
 - List of saved translations showing a preview of the original text, translated text, language pair, and date.
-- Tap an item to expand or view full details.
-- Speak action.
-- Delete action.
-- Clear All action with confirmation.
+- Tap an item to load it into the Translate screen as a read-only view with a **Translate new** action *(amended)*.
+- Speak action (from the loaded Translate screen) *(amended)*.
+- Delete action (swipe for one item).
+- Press-and-hold multi-select with **Select all** and a confirmed delete *(amended: replaces "Clear All action with confirmation")*.
 - Empty state when no translations are saved.
 
 ---
@@ -214,7 +216,7 @@ The application will store a lightweight JSON list of translation history items:
 - Source language and target language.
 - Creation date.
 
-History will be limited to a fixed number of recent items (for example, 50) to keep storage small. Captured images will not be stored.
+History will be limited to a fixed number of recent items (for example, 50) to keep storage small. Captured images will not be stored *(amended: exception — the photo of a saved entry is copied into app-private storage and deleted with that entry, 2026-11-08)*.
 
 A separate database such as SQLite will not be necessary for this initial version.
 
@@ -323,7 +325,7 @@ The initial application will include:
 
 ### 7.2 Supported Languages
 
-The initial version will support a small set of languages that use the Latin script, for example: English, Tagalog, Spanish, French, German, and Indonesian. The exact list will be confirmed against plugin support during development.
+The initial version will support a small set of languages that use the Latin script, for example: English, Tagalog, Spanish, French, German, and Indonesian. The exact list will be confirmed against plugin support during development. *(Amended: Japanese, Chinese, and Korean were added later by user decision, 2026-11-08.)*
 
 ### 7.3 Excluded Features
 
@@ -331,9 +333,9 @@ To maintain a minimal development scope, the following will not be included:
 
 - Live camera (real-time) translation.
 - Handwriting recognition.
-- Automatic source language detection.
-- Languages that use non-Latin scripts.
-- Saving captured images.
+- ~~Automatic source language detection.~~ *(Amended: added via `@capacitor-mlkit/language-identification`, approved 2026-11-07; manual selection remains the fallback.)*
+- ~~Languages that use non-Latin scripts.~~ *(Amended: Japanese, Chinese, and Korean added by user decision, 2026-11-08; all other non-Latin scripts stay excluded.)*
+- ~~Saving captured images.~~ *(Amended: only the photo of a history entry is copied into app-private storage, deleted with the entry; nothing is saved anywhere else, 2026-11-08.)*
 - Cloud synchronization.
 - User registration and authentication.
 - Online translation services or HttpClient requests.
@@ -384,8 +386,8 @@ The application will be developed incrementally using OpenCode with the MiMo V4 
 ### Phase 4: Local History (about 1–2 hours)
 
 - Implement History Service using Capacitor Preferences.
-- Save translations automatically.
-- Build the History screen with view, speak, delete, and clear actions.
+- Save translations on demand with a **Save to History** button *(amended: replaces "Save translations automatically")*.
+- Build the History screen with view, speak, and delete actions — swipe for one item, press-and-hold multi-select for many *(amended: replaces "delete, and clear actions")*.
 
 ### Phase 5: Testing and Refinement (about 1–2 hours)
 
@@ -410,9 +412,9 @@ The application will be developed incrementally using OpenCode with the MiMo V4 
 | Translation | Produces a translation for supported language pairs |
 | Language Swap | Swaps source and target languages |
 | Text-to-Speech | Speaks the translation; shows a message if no voice is available |
-| History Save | Saves each translation automatically |
+| History Save | Saves a translation when the user taps Save to History *(amended)* |
 | History Persistence | History remains after closing and reopening the app |
-| History Delete | Deletes one item and clears all items |
+| History Delete | Deletes one item (swipe) or several selected items (long-press multi-select) *(amended)* |
 | Offline Functionality | Works without internet after models are downloaded |
 
 ---

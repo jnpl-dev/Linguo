@@ -1,12 +1,74 @@
 <ion-header>
   <ion-toolbar>
+    @if (selecting()) {
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="exitSelection()" aria-label="Cancel selection">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ selectedCount() }} selected</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="toggleSelectAll()">
+        <ion-icon slot="start" name="checkmark-done"></ion-icon>
+        {{ allSelected() ? 'Deselect' : 'Select all' }}
+      </ion-button>
+      <ion-button
+        fill="clear"
+        color="danger"
+        [disabled]="selectedCount() === 0"
+        (click)="confirmDeleteSelected()"
+        aria-label="Delete selected"
+      >
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    } @else {
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/translate"></ion-back-button>
     </ion-buttons>
     <ion-title>History</ion-title>
+    }
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p>History page placeholder.</p>
+<ion-content>
+  @if (items().length === 0) {
+  <div class="empty-state">
+    <p>No saved translations yet.</p>
+    <p class="empty-hint">Translate something, then tap “Save to History”.</p>
+  </div>
+  } @else {
+  <ion-list lines="full">
+    @for (item of items(); track item.id) {
+    <ion-item-sliding>
+      <ion-item
+        button
+        detail
+        [class.selected]="isSelected(item.id)"
+        (click)="open(item)"
+        (pointerdown)="onItemPointerDown($event, item)"
+        (pointermove)="onItemPointerMove($event)"
+        (pointerup)="onItemPointerUp()"
+        (pointercancel)="onItemPointerUp()"
+      >
+        @if (selecting()) {
+        <ion-checkbox slot="start" [checked]="isSelected(item.id)" aria-hidden="true" tabindex="-1"></ion-checkbox>
+        }
+        <ion-label class="hist-label">
+          <h2>{{ item.translatedText }}</h2>
+          <p class="source">{{ item.sourceText }}</p>
+          <p class="meta">
+            {{ label(item.sourceLang) }} → {{ label(item.targetLang) }} · {{ item.createdAt | date: 'medium' }}
+          </p>
+        </ion-label>
+      </ion-item>
+      @if (!selecting()) {
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="remove(item)">Delete</ion-item-option>
+      </ion-item-options>
+      }
+    </ion-item-sliding>
+    }
+  </ion-list>
+  }
 </ion-content>

@@ -1,0 +1,22 @@
+diff --git a/node_modules/@capacitor-mlkit/translation/android/src/main/java/io/capawesome/capacitorjs/plugins/mlkit/translation/Translation.java b/node_modules/@capacitor-mlkit/translation/android/src/main/java/io/capawesome/capacitorjs/plugins/mlkit/translation/Translation.java
+index 0801a5e..d2281a6 100644
+--- a/node_modules/@capacitor-mlkit/translation/android/src/main/java/io/capawesome/capacitorjs/plugins/mlkit/translation/Translation.java
++++ b/node_modules/@capacitor-mlkit/translation/android/src/main/java/io/capawesome/capacitorjs/plugins/mlkit/translation/Translation.java
+@@ -34,7 +34,7 @@ public class Translation {
+ 
+     public void downloadModel(String language, final DownloadModelResultCallback resultCallback) {
+         TranslateRemoteModel frenchModel = new TranslateRemoteModel.Builder(language).build();
+-        DownloadConditions conditions = new DownloadConditions.Builder().requireWifi().build();
++        DownloadConditions conditions = new DownloadConditions.Builder().build();
+         modelManager
+             .download(frenchModel, conditions)
+             .addOnSuccessListener(
+@@ -66,7 +66,7 @@ public class Translation {
+             .setTargetLanguage(targetLanguage)
+             .build();
+         final Translator translator = com.google.mlkit.nl.translate.Translation.getClient(options);
+-        DownloadConditions conditions = new DownloadConditions.Builder().requireWifi().build();
++        DownloadConditions conditions = new DownloadConditions.Builder().build();
+         translator
+             .downloadModelIfNeeded(conditions)
+             .addOnSuccessListener(

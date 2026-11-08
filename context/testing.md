@@ -21,18 +21,21 @@ Mark each row Pass or Fail and add notes.
 | 10 | Same language | Set source and target the same | Translate disabled with a hint | |
 | 11 | Swap | Tap swap after translating | Languages and texts swap | |
 | 12 | Speak | Tap Speak on an English or Spanish result | Speech plays | |
-| 13 | Stop | Tap Stop while speaking | Speech stops | |
+| 13 | Stop | While speech plays, tap the red **Stop speaking** button (the one that started) | Speech stops; button returns to Speak | |
 | 14 | No voice | Speak a language with no installed voice | Toast "No voice installed", no crash | |
-| 15 | History save | Complete 3 translations | 3 entries appear in History, newest first | |
-| 16 | History view | Tap an entry | Full original and translation shown | |
-| 17 | History speak | Speak from History | Speech plays | |
-| 18 | Delete one | Swipe delete an entry | Entry removed | |
-| 19 | Clear all | Clear all with confirmation; also test Cancel | Cleared; Cancel keeps entries | |
-| 20 | Persistence | Force-close and reopen the app | History still there | |
-| 21 | Empty state | Clear history and open History | "No saved translations yet." | |
-| 22 | Offline | Turn on airplane mode; repeat rows 1, 4, 9, 12, 15, 16, 20 (using already-downloaded models) | All work without internet | |
-| 23 | Download offline | Airplane mode, translate with a never-downloaded language | Clear error message, app not stuck | |
-| 24 | Permission | Deny camera permission, then try Take Photo | Clear message, no crash | |
+| 15 | History save | Complete 3 translations, tapping **Save to History** after each | 3 entries appear in History, newest first | |
+| 16 | History view | Tap an entry | Translate page shows both texts, languages, and image read-only (inputs disabled); button reads **Translate new** | |
+| 17 | Translate new | On a loaded entry, tap **Translate new** | Text/translation/image cleared, inputs re-enabled, languages kept, Save flow available again | |
+| 18 | History speak | Load an entry, then tap **Speak** | Speech plays | |
+| 19 | Delete one | Swipe delete an entry | Entry removed | |
+| 20 | Multi-select | Press-and-hold a row until a checkbox appears; tap more rows; tap **Select all**; tap trash and confirm; also test Cancel | Selected rows deleted in one operation; Cancel keeps them | |
+| 21 | Selection exit | Uncheck the last selected row, and cancel via the X button | Selection mode exits; list returns to normal | |
+| 22 | Persistence | Force-close and reopen the app | History still there | |
+| 23 | Empty state | Delete every entry (swipe or multi-select) and look at History | "No saved translations yet." | |
+| 24 | Offline | Turn on airplane mode; repeat rows 1, 4, 9, 12, 15, 16, 22 (using already-downloaded models) | All work without internet | |
+| 25 | Download offline | Airplane mode, translate with a never-downloaded language | Clear error message, app not stuck | |
+| 26 | Permission | Deny camera permission, then try Take Photo | Clear message, no crash | |
+| 27 | No Clear all | Check the History header in normal mode | No "Clear all" button is present | |
 
 ## 2. Usability notes
 Record confusing steps, slow moments, awkward screens.
@@ -43,16 +46,17 @@ Fill in after testing. Expected candidates:
 - Text-to-speech depends on voices installed on the phone; some languages may have none.
 - On-device translation quality is lower than large online services.
 - The first use of each language needs internet to download a model (about 30 MB).
-- Only Latin-script languages are supported.
+- Japanese, Chinese, and Korean are supported; other non-Latin scripts are not.
 - Android only; tested on one device.
+- History images are stored at full resolution (a few MB each); at most 50 entries are kept.
 
 ## 4. Suggested improvement (course requirement)
 Describe at least one. Candidates:
 - Live camera translation (continuous OCR on a camera preview).
-- Automatic source language detection.
-- Support for non-Latin scripts (Japanese, Chinese, Korean).
 - Highlight and translate only a selected part of the recognized text.
 - Favorite or pin history entries.
+- Resize images before saving them to history to save space.
+- iOS support.
 
 ## 5. Bugs found and fixed
 Format: date, bug, fix.

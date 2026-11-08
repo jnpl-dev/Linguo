@@ -1,0 +1,1 @@
+import{b as L,x as P,y as E}from"./chunk--ruLmCBV.js";var o=class extends E{async processImage(p){throw this.createUnimplementedException()}createUnimplementedException(){return new P(`This method is not implemented on web.`,L.Unimplemented)}};export{o as TextRecognitionWeb};
