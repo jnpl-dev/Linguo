@@ -24,8 +24,14 @@ After setup, run `npm ls --depth=0` and record exact versions in `progress.md`.
 | `@capawesome/capacitor-photo-manipulator` | Headless crop of the captured photo before OCR (approved 2026-11-07) |
 | `@capacitor-mlkit/language-identification` | On-device language detection for the auto-detect source language (approved 2026-11-07) |
 | `@capacitor/filesystem` | Copy the saved photo out of the cache into app-private storage for history entries (approved 2026-11-08) |
+| `@capacitor/splash-screen` | Show/hide the launch splash screen (approved 2026-11-09) |
 
 Install each with `npm install <package>` followed by `npx cap sync android`.
+
+### Dev-only tools (not bundled into the app)
+| Package | Purpose |
+| --- | --- |
+| `@capacitor/assets` | Generate Android launcher icons and splash drawables from source PNGs (approved 2026-11-09; see `documentation/splash-screens-and-icons.md`) |
 
 If a plugin does not support the installed Capacitor major version, STOP and report. Do not downgrade Capacitor or force install without asking.
 

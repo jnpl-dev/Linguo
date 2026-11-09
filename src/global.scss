@@ -1,12 +1,8 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Linguo design system — shared primitives used by every page.
+ * Brand palette is defined in src/theme/variables.scss.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,13 +21,328 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* ============================================================ base */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Light-only theme: the dark palette import below is intentionally NOT used
+   (see src/theme/variables.scss — no prefers-color-scheme overrides). */
+
+ion-app,
+ion-content {
+  --ion-font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+ion-content {
+  --background: var(--linguo-bg);
+}
+
+/* Soft top-of-screen wash so headers sit on a tinted field, not flat white. */
+ion-content::part(scroll) {
+  background:
+    radial-gradient(120% 60% at 50% 0%, var(--linguo-bg-top) 0%, transparent 70%),
+    var(--linguo-bg);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================ brand header */
+
+/* Header sits outside ion-content, so it needs the same wash as the top of
+   the scroll area — otherwise it would read as a separate band of colour. */
+.brand-header {
+  background: var(--linguo-bg-top);
+}
+
+.brand-header ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  --min-height: 56px;
+  padding-top: var(--ion-safe-area-top, 0px);
+}
+
+.brand-header ion-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--linguo-ink);
+}
+
+/* ion-title renders its children inside a shadow-DOM .toolbar-title wrapper,
+   so flex centering must live on a light-DOM child (the lockup div). A
+   host-level display:flex never reaches the slotted img/span, which were
+   baseline-aligned (text sitting at the bottom of the logo). */
+.brand-header ion-title .lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* The mascot mark is taller than wide (0.80), so size by height and let
+   width follow — a forced square would squash it. */
+.brand-header ion-title img {
+  height: 34px;
+  width: auto;
+  flex: none;
+}
+
+.brand-header ion-title span {
+  letter-spacing: -0.03em;
+}
+
+.brand-header ion-buttons ion-button {
+  --color: var(--linguo-ink-soft);
+}
+
+/* ============================================================ surfaces */
+
+.panel {
+  background: var(--linguo-surface);
+  border: 1px solid var(--linguo-line);
+  border-radius: var(--linguo-radius);
+  box-shadow: var(--linguo-shadow);
+  padding: 16px;
+}
+
+.panel + .panel {
+  margin-top: 14px;
+}
+
+.panel-label {
+  display: block;
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--linguo-ink-soft);
+}
+
+/* Deep navy hero panel — anchors the page and gives the eye somewhere to rest. */
+.panel-hero {
+  background: var(--linguo-hero);
+  border-color: var(--linguo-hero-line);
+  box-shadow: var(--linguo-shadow-strong);
+}
+
+.panel-hero .panel-label {
+  color: var(--linguo-hero-muted);
+}
+
+/* ============================================================ buttons */
+
+ion-button {
+  --border-radius: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* Primary call-to-action: gradient + glow, matching the mascot's blue. */
+.cta {
+  --background: var(--linguo-gradient);
+  --background-hover: var(--linguo-gradient);
+  --background-activated: var(--linguo-gradient);
+  --color: #ffffff;
+  --box-shadow: var(--linguo-gradient-glow);
+  --border-radius: 16px;
+  height: 50px;
+  font-size: 1rem;
+}
+
+.cta::part(native) {
+  text-transform: none;
+}
+
+.pill {
+  --border-radius: 999px;
+  font-weight: 700;
+}
+
+/* ============================================================ form fields */
+
+ion-textarea,
+ion-select {
+  --background: var(--linguo-surface-alt);
+  --border-radius: 14px;
+  --border-color: transparent;
+  --highlight-color: var(--ion-color-primary);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  font-weight: 600;
+}
+
+ion-textarea {
+  --min-height: 96px;
+}
+
+ion-textarea::part(label) {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--linguo-ink-soft);
+  margin-bottom: 8px;
+}
+
+ion-select::part(label) {
+  font-weight: 800;
+  color: var(--linguo-ink);
+}
+
+ion-textarea::part(native),
+ion-select::part(text) {
+  color: var(--linguo-ink);
+}
+
+ion-select::part(icon) {
+  color: var(--linguo-ink-soft);
+}
+
+/* ============================================================ empty states */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 32px;
+  text-align: center;
+  gap: 6px;
+}
+
+.empty-state img {
+  width: 168px;
+  height: 168px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  animation: linguo-float 4s ease-in-out infinite;
+}
+
+.empty-state h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--linguo-ink);
+}
+
+.empty-hint {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--linguo-ink-soft);
+  max-width: 30ch;
+}
+
+/* Warm amber chip — echoes the sparkles in the mascot mark. */
+.chip-warm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--linguo-amber);
+  color: var(--linguo-amber-ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+@keyframes linguo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-state img {
+    animation: none;
+  }
+}
+
+/* ============================================================ status */
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0 2px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.status-row ion-spinner {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================================ crop overlay */
+
+.crop-content {
+  --background: var(--linguo-bg);
+}
+
+.crop-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.crop-frame {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+}
+
+.crop-img {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.crop-rect {
+  position: absolute;
+  border: 2px solid var(--ion-color-primary);
+  background: rgba(51, 98, 251, 0.14);
+  box-shadow: 0 0 0 9999px rgba(19, 24, 68, 0.45);
+  box-sizing: border-box;
+  touch-action: none;
+  cursor: move;
+}
+
+.handle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: var(--ion-color-primary);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  touch-action: none;
+  cursor: grab;
+}
+
+.handle.nw { left: -15px; top: -15px; }
+.handle.ne { right: -15px; top: -15px; }
+.handle.sw { left: -15px; bottom: -15px; }
+.handle.se { right: -15px; bottom: -15px; }
+
+.crop-hint {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--linguo-ink-soft);
+}

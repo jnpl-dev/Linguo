@@ -91,6 +91,28 @@ Then launch **Linguo** from the phone's app drawer — the debug APK is signed w
 
 Every native-facing change needs steps 1–3 again. Web-only edits just need a rebuild.
 
+### Release APK (size-optimized)
+
+```bash
+cd android
+./gradlew assembleRelease        # output: app/build/outputs/apk/release/app-release.apk
+```
+
+- **arm64-only** (`ndk.abiFilters 'arm64-v8a'` in `app/build.gradle`): drops x86/x86_64/armeabi-v7a native libs (~60 MB). Applies to debug too — x86 emulators will not run the app; real devices are unaffected. Sizes: debug ≈ 46 MB, release ≈ 35 MB (R8 minify + resource shrink).
+- **Signing:** `android/linguo-release.keystore` (alias `linguo`, gitignored) with passwords in gitignored `android/local.properties` (`LINGUO_STORE_PASSWORD`, `LINGUO_KEY_PASSWORD`). No keys → release builds unsigned. Never commit either file or paste the passwords into chat/docs.
+- **Android Studio:** `npx cap open android` (always open the `android/` folder, not the repo root) → wait for Gradle sync → **Build → Generate Signed Bundle / APK… → APK** → keystore `android/linguo-release.keystore`, alias `linguo`, passwords from `local.properties`, variant **release**. Plain *Build APK(s)* produces the **debug** APK instead.
+- **Release ≠ debug signature:** `adb install -r` across them fails (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`) — `adb uninstall com.yourname.linguo` first (wipes app data).
+- **WebView debugging is off in release** (Capacitor default): CDP/Playwright scripts only attach to debug builds. Smoke-test release with `adb shell input tap` + screenshots.
+
+### Regenerating launcher/splash assets (only after brand art changes)
+
+```bash
+node scripts/generate-brand-assets.mjs   # sharp → root assets/ + splash_icon.png
+npx capacitor-assets generate --android  # → all mipmap/drawable densities
+```
+
+Then re-apply the hand-patch: generated `mipmap-anydpi-v26/ic_launcher{,_round}.xml` must keep the background layer **full-bleed** (remove its `<inset>`) — the generator insets both layers and a ring can show on circular masks. Rebuild + reinstall; `styles.xml`/`capacitor.config.ts` are untouched by this flow. Note: `capacitor-assets --help` is intercepted by yargs — real flags are in `node_modules/@capacitor/assets/dist/index.js`.
+
 ## 6. Project rules — read before coding
 
 1. Read `context/progress.md` (current status), then `context/implementation-plan.md` (next task).

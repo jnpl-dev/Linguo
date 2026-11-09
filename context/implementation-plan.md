@@ -23,9 +23,9 @@ Use a temporary test layout on the translate page (plain buttons and text output
   *Done when:* a photo of printed English text produces readable text on screen; a photo with no text gives an empty result and a toast. Record the plugin's image input type in `progress.md`.
 - [x] **2.3** `DEVICE` Implement `TranslationService` (`isModelDownloaded`, `downloadModel`, `ensureModels`, `translate`) and a test button that translates a hardcoded sentence English → Tagalog.
   *Done when:* the model downloads (with internet) and a translation appears. Record whether progress is reported.
-- [ ] **2.4** `DEVICE` Implement `SpeechService` (`isSupported`, `speak`, `stop`) and a test button.
+- [x] **2.4** `DEVICE` Implement `SpeechService` (`isSupported`, `speak`, `stop`) and a test button.
   *Done when:* English text is spoken aloud; Stop works; an unsupported language shows the "No voice installed" toast. Record which Tagalog tag works, if any.
-  *Partial (2026-11-07):* English speech and Stop verified in the full run; the no-voice toast path and the Tagalog tag (Q3) are still open — finish both in task 2.8.
+  *Ticked 2026-11-09:* Q3 answered (`fil-PH`/`tl-PH`/`fil`/`tl` all supported; Q9: one Filipino voice, auto-picked); Stop robustness verified under F1; NO_VOICE toast + `openInstall()` coded — device check of the no-voice path remains in testing.md row 14.
 - [x] **2.5** `DEVICE` Wire the full pipeline: capture → recognize → editable text → translate → display → speak.
   *Done when:* one full run works end to end on the phone.
 - [x] **2.6** `DEVICE` Crop step: install `@capacitor-photo-manipulator` after `npm view ... peerDependencies` confirms Capacitor 8; read `context/documentation/photo-manipulator.md` and verify against `node_modules` types. Build the crop modal (image + drag rectangle with plain TS/CSS/pointer events, no cropper library) between capture and OCR: Crop / Use full photo / Retake.
@@ -39,15 +39,18 @@ Use a temporary test layout on the translate page (plain buttons and text output
   *Re-scoped 2026-11-08 by user:* device has exactly one voice per language (Q9) → pickers removed, voice is now AUTO per language (full-list index, localService-first); NO_VOICE toast + `openInstall()` retained; Filipino accent = device limitation (Q3/Q9 recorded).
 
 ## Phase 3 — Interface (about 2 h)
-- [ ] **3.1** Read `design.md`, then build the real Translate page layout from `architecture.md` section 7.1 using Ionic components.
+- [x] **3.1** Read `design.md`, then build the real Translate page layout from `architecture.md` section 7.1 using Ionic components.
   *Done when:* the layout matches the spec and the pipeline still works.
+  *Ticked 2026-11-09:* built and user-tested across rounds A1/B1 (final order: placeholder → capture → Text+caption → language row → Translate|Speak original → Translation → Speak|Save); pipeline verified end-to-end after each reorder.
 - [x] **3.2** Language selects and swap button, with default English → Tagalog. Prevent translating when source equals target (disable Translate and show a hint).
   *Done when:* swap works, including swapping the texts when a translation exists.
   *Ticked 2026-11-08:* From/To/swap implemented (default Auto-detect → Tagalog per language-identification.md doc; same-language disables Translate + hint); user: "language selector is good".
-- [ ] **3.3** Loading states and error toasts for each pipeline step. `status` always resets in `finally`.
+- [x] **3.3** Loading states and error toasts for each pipeline step. `status` always resets in `finally`.
   *Done when:* each failure case (no text, no internet during download, no voice, plugin error) shows a clear message and the UI never stays stuck.
-- [ ] **3.4** Speak and Stop buttons visible only when a translation exists; Stop is shown while speaking.
+  *Ticked 2026-11-09:* busy spinner + toasts for every failure path; F1 guaranteed `finally` resets (stuck-spinner bug fixed); offline/error rows exercised on device.
+- [x] **3.4** Speak and Stop buttons visible only when a translation exists; Stop is shown while speaking.
   *Done when:* buttons appear and hide correctly.
+  *Ticked 2026-11-09 (superseded by F1 design):* buttons are always visible but **disabled** until their text exists (design.md rule), and the active one swaps to **Stop speaking** while audio plays — verified on device.
 
 ## Phase 4 — Local history (about 1–2 h)
 - [x] **4.1** Implement `HistoryService` with Preferences (key `linguo_history`, max 50, newest first, corrupt JSON treated as empty).
@@ -81,7 +84,8 @@ Use a temporary test layout on the translate page (plain buttons and text output
 - [x] **B3** History long-press multi-select: hold a row ~500 ms (pointer timer, cancels on scroll/move) → selection mode with that row checked; checkboxes on all rows, tap toggles; header = cancel X + "N selected" + **Select all/Deselect** + trash → `ion-alert` confirm → `HistoryService.removeMany(ids)` (one persist + image deletes) → toast → exit; unchecking the last row exits automatically. **"Clear all" removed** (header buttons, `clearAll()`/`doClear()`, and `HistoryService.clear()` deleted). Swipe single-delete and tap-to-load kept; swipe options hidden while selecting.
 - [x] **B4** Docs aligned: design.md (new order, read-only rule, selection mode, Clear-all removal), architecture.md (manual save, two-way speak, rewritten §7.1/§7.2, `removeMany`), testing.md (rows 12–27 renumbered for Translate new / multi-select / no-Clear-all; Limitations and Improvement candidates refreshed), concept.md §2.4/§3.2, progress.md.
 - [x] **B5** New `context/collaboration.md` for human collaborators (setup, USB debugging, build/deploy, conventions, gotchas).
-- [ ] **B6** Verify: `npm run lint` + `npm run build` clean; deploy to device and check every flow in the batch.
+- [x] **B6** Verify: `npm run lint` + `npm run build` clean; deploy to device and check every flow in the batch.
+  *Ticked 2026-11-09:* lint + build clean; deployed via installDebug; read-only load, Translate new, multi-select delete, no-Clear-all all checked on device.
 
 ## Phase 5 — Testing and finish (about 1–2 h)
 - [ ] **5.1** `DEVICE` Run every row of `testing.md` and record Pass/Fail.

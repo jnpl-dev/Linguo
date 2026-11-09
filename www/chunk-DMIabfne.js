@@ -1,0 +1,1 @@
+import{C as E,T as P,w as L}from"./chunk-BZssO-4E.js";var i=class extends E{async identifyLanguage(o){throw this.createUnimplementedException()}async identifyPossibleLanguages(o){throw this.createUnimplementedException()}createUnimplementedException(){return new P(`This method is not implemented on web.`,L.Unimplemented)}};export{i as LanguageIdentificationWeb};
