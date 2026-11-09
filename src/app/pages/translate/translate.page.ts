@@ -104,7 +104,7 @@ export class TranslatePage {
   status = signal<Status>('idle');
   sourceCode = signal(AUTO);
   targetCode = signal(LANGUAGES[1].mlkitCode);
-  recognizedText = signal('Good morning!');
+  recognizedText = signal('');
   translatedText = signal('');
   detectedLang = signal<LanguageOption | null>(null);
 

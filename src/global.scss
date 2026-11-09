@@ -67,9 +67,16 @@ body {
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--linguo-ink);
+}
+
+/* ion-title renders its children inside a shadow-DOM .toolbar-title wrapper,
+   so flex centering must live on a light-DOM child (the lockup div). A
+   host-level display:flex never reaches the slotted img/span, which were
+   baseline-aligned (text sitting at the bottom of the logo). */
+.brand-header ion-title .lockup {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 /* The mascot mark is taller than wide (0.80), so size by height and let

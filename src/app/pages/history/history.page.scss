@@ -1,5 +1,11 @@
 /* History page — layout only; shared primitives live in global.scss. */
 
+/* Pull the title closer to the back button: MD ion-title ships with
+   padding-inline-start 20px, which measured as a 20px gap on device. */
+.brand-header ion-title {
+  padding-inline-start: 8px;
+}
+
 .page {
   padding: 4px 16px calc(28px + var(--ion-safe-area-bottom, 0px));
   max-width: 640px;

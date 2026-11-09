@@ -43,7 +43,7 @@ Two screens: `translate` (main) and `history`. This is a small school project me
 - Angular **standalone components only**. No NgModules.
 - **Signals** (`signal`, `computed`) for state. Use `inject()` for dependency injection.
 - Use `async/await` for Capacitor calls. Avoid RxJS unless a library requires it.
-- Import Ionic components from `@ionic/angular/standalone`. Register icons with `addIcons`.
+- Import Ionic components from `@ionic/angular` (NOT `@ionic/angular/standalone` — Ionic 9.0.10 has no `./standalone` export, verified in node_modules; see progress.md Differences). Register icons with `addIcons`.
 - TypeScript strict mode. Explicit return types on all public service methods.
 - File layout: see `architecture.md`. Services in `src/app/services/`, pages in `src/app/pages/`, types in `src/app/models/`.
 - Wrap every Capacitor plugin call in try/catch.

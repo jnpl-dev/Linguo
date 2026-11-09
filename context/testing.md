@@ -36,6 +36,12 @@ Mark each row Pass or Fail and add notes.
 | 25 | Download offline | Airplane mode, translate with a never-downloaded language | Clear error message, app not stuck | |
 | 26 | Permission | Deny camera permission, then try Take Photo | Clear message, no crash | |
 | 27 | No Clear all | Check the History header in normal mode | No "Clear all" button is present | |
+| 28 | Splash | Force-close the app, launch from the drawer, watch the first ~2 s | Pale-blue (`#e9eeff`) splash with the mascot shows ~1.5 s, fades, then the translate page — no white/black flash | Pass (2026-11-09: screencap frames show splash through ~1.5 s, app UI by next frame) |
+| 29 | Launcher icon | Look at the app icon in the launcher/app drawer | Mascot on pale-blue background; no transparent ring, no clipped wordmark | Pass (2026-11-09: home-screen screenshot) |
+| 30 | Translate header | Look at the Translate page header | Mascot mark and "Linguo" are vertically centered with each other, ~14 px apart | Pass (2026-11-09: screenshot, text aligned with logo) |
+| 31 | History header | Open History from the clock button | No logo beside the title; "History" sits ~8 px right of the back arrow | Pass (2026-11-09: screenshot) |
+| 32 | Empty start text | Launch the app fresh (or tap **Translate new**) | Text field shows only the placeholder "Take a photo or type text here"; Translate is disabled until text exists | Pass (2026-11-09: placeholder visible, Translate dimmed) |
+| 33 | Release APK | Install `app-release.apk` (uninstall the debug build first — different signature), repeat rows 7, 9, 15, 16, 22, 28 | Same behavior as debug; release smoke already passed 2026-11-09 (translate round-trip + history nav) | Partial (2026-11-09: rows 7+9+28 passed on release; 15/16/22 not yet re-run on release) |
 
 ## 2. Usability notes
 Record confusing steps, slow moments, awkward screens.

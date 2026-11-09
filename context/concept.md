@@ -170,7 +170,7 @@ Conventions:
 
 - Standalone components only (no NgModules).
 - Signals for state; `async/await` for Capacitor calls.
-- Ionic components imported from `@ionic/angular/standalone`.
+- Ionic components imported from `@ionic/angular` (the `./standalone` subpath does not exist in Ionic 9).
 
 ### 4.2 Image Capture
 
@@ -354,7 +354,7 @@ These features may be considered for future development but are not required for
 
 ### 7.5 Platform Note
 
-The initial implementation will target Android and be tested on a real device. The plugins used also support iOS, but iOS is not tested in this version.
+The app targets **Android only** (`agents.md` §4 hard rule; scope decision for this course project). Reasons: it is tested on one real Android phone (Vivo V2301A), building for iOS would require macOS + Xcode (unavailable on this Windows machine), and a one-day project should not split testing across two platforms. Nothing in the stack is Android-exclusive — Ionic/Angular web code and the ML Kit/Capacitor plugins also support iOS — so a future iOS port would mainly mean `npx cap add ios` plus platform-specific config, but it is **untested and out of scope for this version**.
 
 ---
 
