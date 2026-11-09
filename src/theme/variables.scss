@@ -5,6 +5,10 @@
  *   src/assets/icon/linguo-secondary.png — navy #131844, royal blue #3362FB,
  *                                          pale blue #B1BFFB, amber #FCB52A
  *   src/assets/icon/favicon.png          — sky blue #478AFF
+ *
+ * LIGHT ONLY (user decision 2026-11-09): there is no dark-mode override and no
+ * `prefers-color-scheme: dark` block — the app always renders this light theme.
+ * Surfaces are a soft pale-blue wash tinted from the logo's pale blue #B1BFFB.
  */
 
 :root {
@@ -72,34 +76,37 @@
   --ion-color-light-shade: #d2d8e6;
   --ion-color-light-tint: #f0f4ff;
 
-  /* ------------------------------------------------------------- surfaces */
-  --ion-background-color: #e7ebf7;
+  /* ------------------------------------------------------------- surfaces
+     Soft pale-blue wash: #B1BFFB (logo) lightened toward white so body copy
+     stays high-contrast. */
+  --ion-background-color: #e9eeff;
   --ion-text-color: #131844;
   --ion-toolbar-background: transparent;
   --ion-toolbar-color: #131844;
   --ion-item-background: transparent;
   --ion-card-background: #ffffff;
-  --ion-border-color: #dde4f4;
+  --ion-border-color: #dbe3fb;
   --ion-font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', sans-serif;
 
   /* ---------------------------------------------------------- linguo tokens */
   --linguo-ink: #131844;
-  --linguo-ink-soft: #5a6488;
-  --linguo-line: #dde4f4;
+  --linguo-ink-soft: #57618f;
+  --linguo-line: #dbe3fb;
   --linguo-surface: #ffffff;
-  --linguo-surface-alt: #eff3fc;
-  --linguo-bg: #e7ebf7;
-  --linguo-bg-top: #dce3f3;
+  --linguo-surface-alt: #f2f5ff;
+  --linguo-bg: #e9eeff;
+  --linguo-bg-top: #dee7ff;
   --linguo-radius: 20px;
   --linguo-radius-sm: 14px;
-  --linguo-shadow: 0 1px 2px rgba(19, 24, 68, 0.04), 0 10px 24px rgba(19, 24, 68, 0.06);
-  --linguo-shadow-strong: 0 2px 4px rgba(19, 24, 68, 0.05), 0 18px 40px rgba(19, 24, 68, 0.1);
-  --linguo-gradient: linear-gradient(135deg, #2e5be8 0%, #478aff 100%);
-  --linguo-gradient-glow: 0 8px 20px rgba(46, 91, 232, 0.28);
+  --linguo-shadow: 0 1px 2px rgba(19, 24, 68, 0.05), 0 10px 24px rgba(51, 98, 251, 0.1);
+  --linguo-shadow-strong: 0 2px 4px rgba(19, 24, 68, 0.06), 0 18px 40px rgba(51, 98, 251, 0.16);
+  --linguo-gradient: linear-gradient(135deg, #3362fb 0%, #478aff 100%);
+  --linguo-gradient-glow: 0 8px 20px rgba(51, 98, 251, 0.3);
 
-  /* Deep navy hero surface — taken from the mascot's face plate. */
-  --linguo-hero: linear-gradient(155deg, #1b2364 0%, #131844 62%, #101540 100%);
+  /* Deep navy hero surface — the mascot's face plate, lifted with its
+     royal-blue hood so it agrees with the pale-blue page wash. */
+  --linguo-hero: linear-gradient(155deg, #212c85 0%, #131844 62%, #101540 100%);
   --linguo-hero-line: rgba(255, 255, 255, 0.12);
   --linguo-hero-text: #eef1ff;
   --linguo-hero-muted: #a3addb;
@@ -109,38 +116,4 @@
   /* Warm amber chip — echoes the mascot's sparkles. */
   --linguo-amber: #fff3da;
   --linguo-amber-ink: #8a5a00;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ion-background-color: #0b0f2b;
-    --ion-text-color: #e9edff;
-    --ion-toolbar-color: #e9edff;
-    --ion-item-background: transparent;
-    --ion-card-background: #141943;
-    --ion-border-color: #232a5e;
-    --ion-color-light: #1b2152;
-    --ion-color-light-contrast: #e9edff;
-    --ion-color-dark: #e9edff;
-    --ion-color-dark-contrast: #0b0f2b;
-    --ion-color-medium: #9aa3cf;
-
-    --linguo-ink: #e9edff;
-    --linguo-ink-soft: #9aa3cc;
-    --linguo-line: #232a5e;
-    --linguo-surface: #141943;
-    --linguo-surface-alt: #1b2152;
-    --linguo-bg: #0b0f2b;
-    --linguo-bg-top: #101540;
-    --linguo-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.3);
-    --linguo-shadow-strong: 0 2px 4px rgba(0, 0, 0, 0.45), 0 18px 40px rgba(0, 0, 0, 0.45);
-    --linguo-gradient-glow: 0 8px 20px rgba(46, 91, 232, 0.4);
-
-    --linguo-hero: linear-gradient(155deg, #212a75 0%, #161d55 62%, #111640 100%);
-    --linguo-hero-line: rgba(255, 255, 255, 0.14);
-    --linguo-hero-field: rgba(255, 255, 255, 0.07);
-
-    --linguo-amber: #3a2f14;
-    --linguo-amber-ink: #f6c663;
-  }
 }

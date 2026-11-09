@@ -21,14 +21,10 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * https://ionicframework.com/docs/theming/dark-mode
- */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
 /* ============================================================ base */
+
+/* Light-only theme: the dark palette import below is intentionally NOT used
+   (see src/theme/variables.scss — no prefers-color-scheme overrides). */
 
 ion-app,
 ion-content {
@@ -54,7 +50,7 @@ body {
 /* ============================================================ brand header */
 
 /* Header sits outside ion-content, so it needs the same wash as the top of
-   the scroll area — otherwise dark mode shows a black bar over navy content. */
+   the scroll area — otherwise it would read as a separate band of colour. */
 .brand-header {
   background: var(--linguo-bg-top);
 }

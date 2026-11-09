@@ -14,8 +14,8 @@ Forbidden: Tailwind, Bootstrap, Konsta UI, Angular Material, custom web fonts, a
 
 ## 3. Theme
 - Define the accent color by overriding the `--ion-color-primary` variable family (`--ion-color-primary`, `-rgb`, `-contrast`, `-contrast-rgb`, `-shade`, `-tint`) in the theme variables file the Ionic starter provides (usually `src/theme/variables.scss`; check where the starter defines them).
-- Accent color: teal `#0D9488`. Derive shade (about 12% darker) and tint (about 10% lighter) following Ionic's color-variable convention. Contrast color: white.
-- Support dark mode with Ionic's built-in dark palette that follows the system setting (see the Ionic theming docs for the palette import). Do not hand-write a dark theme.
+- Accent color: royal blue `#3362FB` from the logo (user decision 2026-11-09, replacing the original teal `#0D9488`). Shade `#2d56dc`, tint `#4672fc`, contrast white. Secondary sky blue `#478AFF`, tertiary/amber `#FCB52A`, ink navy `#131844`, pale blue `#B1BFFB` — all sampled from `src/assets/icon/linguo-secondary.png` and `favicon.png`.
+- **Light mode only** (user decision 2026-11-09): no Ionic dark palette import and no `prefers-color-scheme: dark` override — the light theme always applies. Page background is a soft pale-blue wash `#e9eeff` / header `#dee7ff`, tinted from the logo's pale blue `#B1BFFB`; cards stay `#ffffff`, borders `#dbe3fb`.
 - Fonts: Ionic/system defaults only.
 
 ## 4. Layout rules
@@ -68,7 +68,7 @@ Strict top-to-bottom order (user decision 2026-11-08, third round):
 - Do not change the app's navigation structure (two pages: translate, history).
 
 ## 9. Check before finishing a UI task
-- Looks correct in light and dark mode.
+- Looks correct in light mode (the only theme — dark mode was removed 2026-11-09).
 - All buttons reachable with a thumb and at least 44 px tall.
 - Empty, busy, and error states all exist.
 - Ask the user to confirm the result on the phone (you cannot see it).
