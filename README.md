@@ -8,6 +8,18 @@ Linguo is an Ionic + Angular + Capacitor app (two screens only: **Translate** an
   <img src="assets/splash.png" alt="Linguo splash screen — mascot on pale blue" width="360">
 </p>
 
+## Deliverables (course submission)
+
+All submission files are in the [`deliverables/`](deliverables/) folder at the repo root:
+
+| File | What it is |
+| --- | --- |
+| [`deliverables/app-release.apk`](deliverables/app-release.apk) | The Android app — signed release build. Copy it to an Android phone and tap it to install (allow "install from unknown source" if prompted). Works on Android 7.0+ arm64 devices; if an older Linguo build is installed, uninstall it first (different signature). |
+| [`deliverables/Linguo-Document.docx`](deliverables/Linguo-Document.docx) | The project document / manuscript (Microsoft Word) |
+| `deliverables/` walkthrough video | Video presentation — added here when ready |
+
+No account or setup is needed to run the app: grant the camera permission when asked, and the first translation per language downloads that language's model once (~30 MB); everything works offline afterwards.
+
 ## How it works
 
 1. **Capture** — take a photo or pick one from the gallery, then crop to the region you care about.
