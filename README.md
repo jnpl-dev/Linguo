@@ -16,7 +16,7 @@ All submission files are in the [`deliverables/`](deliverables/) folder at the r
 | --- | --- |
 | [`deliverables/app-release.apk`](deliverables/app-release.apk) | The Android app — signed release build. Copy it to an Android phone and tap it to install (allow "install from unknown source" if prompted). Works on Android 7.0+ arm64 devices; if an older Linguo build is installed, uninstall it first (different signature). |
 | [`deliverables/Linguo-Document.docx`](deliverables/Linguo-Document.docx) | The project document / manuscript (Microsoft Word) |
-| `deliverables/` walkthrough video | Video presentation — added here when ready |
+| [`deliverables/Linguo-video-presentation.mp4`](deliverables/Linguo-video-presentation.mp4) | Video presentation (MP4) — walkthrough of the app |
 
 No account or setup is needed to run the app: grant the camera permission when asked, and the first translation per language downloads that language's model once (~30 MB); everything works offline afterwards.
 
